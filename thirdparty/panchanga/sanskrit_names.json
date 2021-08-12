@@ -247,5 +247,31 @@
             "3": "Śarad",
             "4": "Hemanta",
             "5": "Śiśira"
-           }
+           } ,
+
+"rashis":   {
+          "0":	"Mesha (Aries)",
+          "1"	:"Vrishabha (Taurus)",
+          "2"	:"Mithun (Gemini)",
+          "3"	:"Karka (Cancer)",
+          "4"	:"Simha / Sinh (Leo)",
+          "5"	:"Kanya (Vigro)",
+          "6"	:"Tula (Libra)",
+          "7"	:"Vruschika (Scorpius)",
+          "8"	:"Dhanu (Sagittarius)",
+          "9"	:"Makar (Capricorn)",
+          "10":	"Kumbha (Aquarius)",
+          "11":	"Meena (Pisces)"
+      },
+
+"gotras": {
+  "1": "Shandilya", 
+  "2": "Gautama Maharishi", 
+  "3": "Bharadwaja", 
+  "4": "Vishvamitra", 
+  "5": "Jamadagni", 
+  "6": "Vashista", 
+  "7": "Kashyapa", 
+  "8": "Atri"
+}
 }

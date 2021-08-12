@@ -6,21 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>999</width>
-    <height>735</height>
+    <width>1085</width>
+    <height>794</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QDialogButtonBox" name="buttonBox">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>590</y>
-      <width>193</width>
-      <height>28</height>
+      <x>360</x>
+      <y>650</y>
+      <width>271</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="standardButtons">
@@ -30,86 +33,114 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>120</x>
       <y>90</y>
-      <width>814</width>
-      <height>485</height>
+      <width>871</width>
+      <height>516</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_date">
        <property name="text">
-        <string>Rashi</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QComboBox" name="comboBox_3"/>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_11">
-       <property name="text">
-        <string>Address</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Seva date basis</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Seva start</string>
+        <string>Seva date preference</string>
        </property>
       </widget>
      </item>
      <item row="5" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_seva_start" stretch="0,1,0,1">
+       <item>
+        <widget class="QLabel" name="label_start_month">
+         <property name="text">
+          <string>Month</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_start_month"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_star_year">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Year</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox_start_year">
+         <property name="cursor">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="minimum">
+          <number>2000</number>
+         </property>
+         <property name="maximum">
+          <number>9999</number>
+         </property>
+         <property name="value">
+          <number>2021</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_nakshatra">
+       <property name="text">
+        <string>Nakshatra</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_seva_date_basis">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QRadioButton" name="radioButton">
+        <widget class="QRadioButton" name="radioButton_date">
          <property name="text">
           <string>Date</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_3">
+        <widget class="QRadioButton" name="radioButton_nakshatra">
          <property name="text">
           <string>Nakshatra</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_4">
+        <widget class="QRadioButton" name="radioButton_week">
          <property name="text">
           <string>Week number and day</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_2">
+        <widget class="QRadioButton" name="radioButton_tithi">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Tithi</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_5">
+        <widget class="QRadioButton" name="radioButton_flexible">
          <property name="text">
           <string>Flexible</string>
          </property>
@@ -117,35 +148,134 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_name">
        <property name="text">
-        <string>Nakshatra</string>
+        <string>Name</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_group">
        <property name="text">
-        <string>Gotra</string>
+        <string>Does this sevadar belong to a group?</string>
        </property>
       </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_basis">
+       <property name="text">
+        <string>Seva date basis</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="comboBox_gotra"/>
      </item>
      <item row="0" column="2">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit_name"/>
      </item>
-     <item row="6" column="2">
-      <layout class="QVBoxLayout" name="verticalLayout">
+     <item row="9" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout_address">
        <item>
-        <widget class="QSpinBox" name="spinBox"/>
+        <widget class="QComboBox" name="comboBox_address"/>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_5"/>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0,1">
+        <layout class="QVBoxLayout" name="verticalLayout_address_lines">
          <item>
-          <widget class="QLabel" name="label_12">
+          <widget class="QLineEdit" name="lineEdit_address1">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_address2">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_address3">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_address4">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="8" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_group_yes_no">
+       <item>
+        <widget class="QRadioButton" name="radioButton_group_yes">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::DefaultContextMenu</enum>
+         </property>
+         <property name="text">
+          <string>Yes</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_group_no">
+         <property name="text">
+          <string>No</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_seva_start">
+       <property name="text">
+        <string>Seva start</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout_date_preference">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QSpinBox" name="spinBox_date">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_nakshatra_2"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_day_week_no" stretch="0,1,0,1">
+         <item>
+          <widget class="QLabel" name="label_day">
            <property name="text">
             <string>Day</string>
            </property>
@@ -155,10 +285,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_7"/>
+          <widget class="QComboBox" name="comboBox_day"/>
          </item>
          <item>
-          <widget class="QLabel" name="label_13">
+          <widget class="QLabel" name="label_week">
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
            </property>
@@ -171,7 +301,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_4">
+          <widget class="QSpinBox" name="spinBox_week_no">
            <property name="cursor">
             <cursorShape>ArrowCursor</cursorShape>
            </property>
@@ -189,116 +319,53 @@
         </layout>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_6"/>
+        <widget class="QComboBox" name="comboBox_tithi">
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="comboBox"/>
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBox_nakshatra"/>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_9">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_gender">
        <property name="text">
-        <string>Seva date preference</string>
+        <string>Gender</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_rashi">
+       <property name="text">
+        <string>Rashi</string>
        </property>
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QComboBox" name="comboBox_2"/>
+      <widget class="QComboBox" name="comboBox_rashi"/>
      </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_10">
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBox_gender"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_gotra">
        <property name="text">
-        <string>Does this sevadar belong to a group?</string>
+        <string>Gotra</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QRadioButton" name="radioButton_6">
-         <property name="text">
-          <string>Yes</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_7">
-         <property name="text">
-          <string>No</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0,1">
-       <item>
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Month</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox_4"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="text">
-          <string>Year</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="spinBox_2">
-         <property name="cursor">
-          <cursorShape>ArrowCursor</cursorShape>
-         </property>
-         <property name="minimum">
-          <number>2000</number>
-         </property>
-         <property name="maximum">
-          <number>9999</number>
-         </property>
-         <property name="value">
-          <number>2021</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="8" column="2">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QComboBox" name="comboBox_8"/>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QLineEdit" name="lineEdit_2"/>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_5"/>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_4"/>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_3"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_address">
+       <property name="text">
+        <string>Address</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -308,7 +375,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>999</width>
+     <width>1085</width>
      <height>26</height>
     </rect>
    </property>

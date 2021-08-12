@@ -80,7 +80,7 @@ try:
         '''
             CREATE TABLE IF NOT EXISTS SevaStartMonths(
                 sevadar_id INTEGER,
-                start_month TEXT,
+                start_yyyymm TEXT,
                 FOREIGN KEY (sevadar_id)
                     REFERENCES Sevadars(sevadar_id)
                         ON UPDATE CASCADE
@@ -106,7 +106,7 @@ try:
     cur.execute(
         '''
             CREATE TABLE IF NOT EXISTS PoojaCount(
-                mmyyyy  TEXT,
+                yyyymm  TEXT,
                 count INTEGER
             );
         '''

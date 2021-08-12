@@ -1,273 +1,316 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'testQmIXYH.ui'
+## Form generated from reading UI file 'testoNleQq.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+import SanskritNames
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
+import actions
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(999, 735)
+        MainWindow.resize(1079, 736)
+        MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setGeometry(QRect(390, 590, 193, 28))
+        self.buttonBox.setGeometry(QRect(390, 610, 193, 28))
         self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
         self.gridLayoutWidget = QWidget(self.centralwidget)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(80, 90, 814, 485))
+        self.gridLayoutWidget.setGeometry(QRect(80, 80, 814, 531))
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.label_2 = QLabel(self.gridLayoutWidget)
-        self.label_2.setObjectName(u"label_2")
+        self.label_date = QLabel(self.gridLayoutWidget)
+        self.label_date.setObjectName(u"label_date")
 
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_date, 7, 0, 1, 1)
 
-        self.comboBox_3 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_3.setObjectName(u"comboBox_3")
+        self.horizontalLayout_seva_start = QHBoxLayout()
+        self.horizontalLayout_seva_start.setObjectName(u"horizontalLayout_seva_start")
+        self.label_start_month = QLabel(self.gridLayoutWidget)
+        self.label_start_month.setObjectName(u"label_start_month")
+        self.label_start_month.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.gridLayout.addWidget(self.comboBox_3, 3, 2, 1, 1)
+        self.horizontalLayout_seva_start.addWidget(self.label_start_month)
 
-        self.label_11 = QLabel(self.gridLayoutWidget)
-        self.label_11.setObjectName(u"label_11")
+        self.comboBox_start_month = QComboBox(self.gridLayoutWidget)
+        self.comboBox_start_month.setObjectName(u"comboBox_start_month")
 
-        self.gridLayout.addWidget(self.label_11, 8, 0, 1, 1)
+        self.horizontalLayout_seva_start.addWidget(self.comboBox_start_month)
 
-        self.label_7 = QLabel(self.gridLayoutWidget)
-        self.label_7.setObjectName(u"label_7")
+        self.label_star_year = QLabel(self.gridLayoutWidget)
+        self.label_star_year.setObjectName(u"label_star_year")
+        self.label_star_year.setLayoutDirection(Qt.LeftToRight)
+        self.label_star_year.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.gridLayout.addWidget(self.label_7, 5, 0, 1, 1)
+        self.horizontalLayout_seva_start.addWidget(self.label_star_year)
 
-        self.label = QLabel(self.gridLayoutWidget)
-        self.label.setObjectName(u"label")
+        self.spinBox_start_year = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_start_year.setObjectName(u"spinBox_start_year")
+        self.spinBox_start_year.setCursor(QCursor(Qt.ArrowCursor))
+        self.spinBox_start_year.setMinimum(2000)
+        self.spinBox_start_year.setMaximum(9999)
+        self.spinBox_start_year.setValue(2021)
 
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.horizontalLayout_seva_start.addWidget(self.spinBox_start_year)
 
-        self.label_8 = QLabel(self.gridLayoutWidget)
-        self.label_8.setObjectName(u"label_8")
+        self.horizontalLayout_seva_start.setStretch(1, 1)
+        self.horizontalLayout_seva_start.setStretch(3, 1)
 
-        self.gridLayout.addWidget(self.label_8, 4, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_seva_start, 5, 2, 1, 1)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.radioButton = QRadioButton(self.gridLayoutWidget)
-        self.radioButton.setObjectName(u"radioButton")
+        self.label_nakshatra = QLabel(self.gridLayoutWidget)
+        self.label_nakshatra.setObjectName(u"label_nakshatra")
 
-        self.horizontalLayout_2.addWidget(self.radioButton)
+        self.gridLayout.addWidget(self.label_nakshatra, 3, 0, 1, 1)
 
-        self.radioButton_3 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_3.setObjectName(u"radioButton_3")
+        self.horizontalLayout__date_basis = QHBoxLayout()
+        self.horizontalLayout__date_basis.setObjectName(u"horizontalLayout__date_basis")
+        self.horizontalLayout__date_basis.setSizeConstraint(QLayout.SetDefaultConstraint)
 
-        self.horizontalLayout_2.addWidget(self.radioButton_3)
+        self.radioButton_date_basis = []
+        self.radioButtonGroup_date_basis = QtWidgets.QButtonGroup(MainWindow)
+        for i in range(5):
+            self.radioButton_date_basis.append(QRadioButton(self.gridLayoutWidget))
+            self.radioButton_date_basis[i].setObjectName("radioButton_date_basis_"+str(i))
+            
+            self.horizontalLayout__date_basis.addWidget(self.radioButton_date_basis[i])
 
-        self.radioButton_4 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_4.setObjectName(u"radioButton_4")
+            
+            self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i])
 
-        self.horizontalLayout_2.addWidget(self.radioButton_4)
+        
+        
 
-        self.radioButton_2 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_2.setObjectName(u"radioButton_2")
 
-        self.horizontalLayout_2.addWidget(self.radioButton_2)
 
-        self.radioButton_5 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_5.setObjectName(u"radioButton_5")
+        # self.radioButton_date = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_date.setObjectName(u"radioButton_date")
 
-        self.horizontalLayout_2.addWidget(self.radioButton_5)
+        # self.horizontalLayout__date_basis.addWidget(self.radioButton_date)
 
+        # self.radioButton_nakshatra = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_nakshatra.setObjectName(u"radioButton_nakshatra")
 
-        self.gridLayout.addLayout(self.horizontalLayout_2, 5, 2, 1, 1)
+        # self.horizontalLayout__date_basis.addWidget(self.radioButton_nakshatra)
 
-        self.label_3 = QLabel(self.gridLayoutWidget)
-        self.label_3.setObjectName(u"label_3")
+        # self.radioButton_week = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_week.setObjectName(u"radioButton_week")
 
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+        # self.horizontalLayout__date_basis.addWidget(self.radioButton_week)
 
-        self.label_4 = QLabel(self.gridLayoutWidget)
-        self.label_4.setObjectName(u"label_4")
+        # self.radioButton_tithi = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_tithi.setObjectName(u"radioButton_tithi")
 
-        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+        # self.horizontalLayout__date_basis.addWidget(self.radioButton_tithi)
 
-        self.lineEdit = QLineEdit(self.gridLayoutWidget)
-        self.lineEdit.setObjectName(u"lineEdit")
+        # self.radioButton_flexible = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_flexible.setObjectName(u"radioButton_flexible")
 
-        self.gridLayout.addWidget(self.lineEdit, 0, 2, 1, 1)
+        # self.horizontalLayout__date_basis.addWidget(self.radioButton_flexible)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.spinBox = QSpinBox(self.gridLayoutWidget)
-        self.spinBox.setObjectName(u"spinBox")
 
-        self.verticalLayout.addWidget(self.spinBox)
+        self.gridLayout.addLayout(self.horizontalLayout__date_basis, 6, 2, 1, 1)
 
-        self.comboBox_5 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_5.setObjectName(u"comboBox_5")
+        self.label_name = QLabel(self.gridLayoutWidget)
+        self.label_name.setObjectName(u"label_name")
 
-        self.verticalLayout.addWidget(self.comboBox_5)
+        self.gridLayout.addWidget(self.label_name, 0, 0, 1, 1)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.label_12 = QLabel(self.gridLayoutWidget)
-        self.label_12.setObjectName(u"label_12")
-        self.label_12.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_group = QLabel(self.gridLayoutWidget)
+        self.label_group.setObjectName(u"label_group")
 
-        self.horizontalLayout_4.addWidget(self.label_12)
+        self.gridLayout.addWidget(self.label_group, 8, 0, 1, 1)
 
-        self.comboBox_7 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_7.setObjectName(u"comboBox_7")
+        self.label_basis = QLabel(self.gridLayoutWidget)
+        self.label_basis.setObjectName(u"label_basis")
 
-        self.horizontalLayout_4.addWidget(self.comboBox_7)
+        self.gridLayout.addWidget(self.label_basis, 6, 0, 1, 1)
 
-        self.label_13 = QLabel(self.gridLayoutWidget)
-        self.label_13.setObjectName(u"label_13")
-        self.label_13.setLayoutDirection(Qt.LeftToRight)
-        self.label_13.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.comboBox_gotra = QComboBox(self.gridLayoutWidget)
+        self.comboBox_gotra.setObjectName(u"comboBox_gotra")
 
-        self.horizontalLayout_4.addWidget(self.label_13)
+        self.gridLayout.addWidget(self.comboBox_gotra, 4, 2, 1, 1)
 
-        self.spinBox_4 = QSpinBox(self.gridLayoutWidget)
-        self.spinBox_4.setObjectName(u"spinBox_4")
-        self.spinBox_4.setCursor(QCursor(Qt.ArrowCursor))
-        self.spinBox_4.setMinimum(1)
-        self.spinBox_4.setMaximum(6)
-        self.spinBox_4.setValue(1)
+        self.label_address = QLabel(self.gridLayoutWidget)
+        self.label_address.setObjectName(u"label_address")
 
-        self.horizontalLayout_4.addWidget(self.spinBox_4)
+        self.gridLayout.addWidget(self.label_address, 9, 0, 1, 1)
 
-        self.horizontalLayout_4.setStretch(1, 1)
-        self.horizontalLayout_4.setStretch(3, 1)
+        self.lineEdit_name = QLineEdit(self.gridLayoutWidget)
+        self.lineEdit_name.setObjectName(u"lineEdit_name")
 
-        self.verticalLayout.addLayout(self.horizontalLayout_4)
+        self.gridLayout.addWidget(self.lineEdit_name, 0, 2, 1, 1)
 
-        self.comboBox_6 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_6.setObjectName(u"comboBox_6")
+        self.verticalLayout_address = QVBoxLayout()
+        self.verticalLayout_address.setObjectName(u"verticalLayout_address")
+        self.comboBox_address = QComboBox(self.gridLayoutWidget)
+        self.comboBox_address.setObjectName(u"comboBox_address")
 
-        self.verticalLayout.addWidget(self.comboBox_6)
+        self.verticalLayout_address.addWidget(self.comboBox_address)
 
+        self.verticalLayout_address_lines = QVBoxLayout()
+        self.verticalLayout_address_lines.setObjectName(u"verticalLayout_address_lines")
 
-        self.gridLayout.addLayout(self.verticalLayout, 6, 2, 1, 1)
+        self.lineEdit_address = []
+        for i in range(4):
 
-        self.comboBox = QComboBox(self.gridLayoutWidget)
-        self.comboBox.setObjectName(u"comboBox")
+            self.lineEdit_address.append(QLineEdit(self.gridLayoutWidget))
+            self.lineEdit_address[i].setObjectName("lineEdit_address"+str(i))
+            self.lineEdit_address[i].setEnabled(True)
 
-        self.gridLayout.addWidget(self.comboBox, 1, 2, 1, 1)
+            self.verticalLayout_address_lines.addWidget(self.lineEdit_address[i])
 
-        self.label_9 = QLabel(self.gridLayoutWidget)
-        self.label_9.setObjectName(u"label_9")
+        # self.lineEdit_address1 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address1.setObjectName(u"lineEdit_address1")
+        # self.lineEdit_address1.setEnabled(True)
 
-        self.gridLayout.addWidget(self.label_9, 6, 0, 1, 1)
+        # self.verticalLayout_address_lines.addWidget(self.lineEdit_address1)
 
-        self.comboBox_2 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_2.setObjectName(u"comboBox_2")
+        # self.lineEdit_address2 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address2.setObjectName(u"lineEdit_address2")
+        # self.lineEdit_address2.setEnabled(True)
 
-        self.gridLayout.addWidget(self.comboBox_2, 2, 2, 1, 1)
+        # self.verticalLayout_address_lines.addWidget(self.lineEdit_address2)
 
-        self.label_10 = QLabel(self.gridLayoutWidget)
-        self.label_10.setObjectName(u"label_10")
+        # self.lineEdit_address3 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address3.setObjectName(u"lineEdit_address3")
+        # self.lineEdit_address3.setEnabled(True)
 
-        self.gridLayout.addWidget(self.label_10, 7, 0, 1, 1)
+        # self.verticalLayout_address_lines.addWidget(self.lineEdit_address3)
 
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.radioButton_6 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_6.setObjectName(u"radioButton_6")
+        # self.lineEdit_address4 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address4.setObjectName(u"lineEdit_address4")
+        # self.lineEdit_address4.setEnabled(True)
 
-        self.horizontalLayout_3.addWidget(self.radioButton_6)
+        # self.verticalLayout_address_lines.addWidget(self.lineEdit_address4)
 
-        self.radioButton_7 = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_7.setObjectName(u"radioButton_7")
 
-        self.horizontalLayout_3.addWidget(self.radioButton_7)
+        self.verticalLayout_address.addLayout(self.verticalLayout_address_lines)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_3, 7, 2, 1, 1)
+        self.gridLayout.addLayout(self.verticalLayout_address, 9, 2, 1, 1)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.label_5 = QLabel(self.gridLayoutWidget)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.horizontalLayout_group_yes_no = QHBoxLayout()
+        self.horizontalLayout_group_yes_no.setObjectName(u"horizontalLayout_group_yes_no")
+        self.radioButton_group_yes = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_group_yes.setObjectName(u"radioButton_group_yes")
+        self.radioButton_group_yes.setContextMenuPolicy(Qt.DefaultContextMenu)
+        self.radioButton_group_yes.setChecked(True)
 
-        self.horizontalLayout.addWidget(self.label_5)
+        self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_yes)
 
-        self.comboBox_4 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_4.setObjectName(u"comboBox_4")
+        self.radioButton_group_no = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_group_no.setObjectName(u"radioButton_group_no")
 
-        self.horizontalLayout.addWidget(self.comboBox_4)
+        self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_no)
 
-        self.label_6 = QLabel(self.gridLayoutWidget)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setLayoutDirection(Qt.LeftToRight)
-        self.label_6.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.horizontalLayout.addWidget(self.label_6)
+        self.gridLayout.addLayout(self.horizontalLayout_group_yes_no, 8, 2, 1, 1)
 
-        self.spinBox_2 = QSpinBox(self.gridLayoutWidget)
-        self.spinBox_2.setObjectName(u"spinBox_2")
-        self.spinBox_2.setCursor(QCursor(Qt.ArrowCursor))
-        self.spinBox_2.setMinimum(2000)
-        self.spinBox_2.setMaximum(9999)
-        self.spinBox_2.setValue(2021)
+        self.label_seva_start = QLabel(self.gridLayoutWidget)
+        self.label_seva_start.setObjectName(u"label_seva_start")
 
-        self.horizontalLayout.addWidget(self.spinBox_2)
+        self.gridLayout.addWidget(self.label_seva_start, 5, 0, 1, 1)
 
-        self.horizontalLayout.setStretch(1, 1)
-        self.horizontalLayout.setStretch(3, 1)
+        self.verticalLayout_date_preference = QVBoxLayout()
+        self.verticalLayout_date_preference.setSpacing(0)
+        self.verticalLayout_date_preference.setObjectName(u"verticalLayout_date_preference")
+        self.verticalLayout_date_preference.setSizeConstraint(QLayout.SetMinimumSize)
+        self.verticalLayout_date_preference.setContentsMargins(0, -1, -1, -1)
 
-        self.gridLayout.addLayout(self.horizontalLayout, 4, 2, 1, 1)
+        # self.verticalLayout_date_preference = QVBoxLayout()
+        # self.verticalLayout_date_preference.setObjectName(u"verticalLayout_date_preference")
+        self.spinBox_date = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_date.setObjectName(u"spinBox_date")
 
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.comboBox_8 = QComboBox(self.gridLayoutWidget)
-        self.comboBox_8.setObjectName(u"comboBox_8")
+        self.verticalLayout_date_preference.addWidget(self.spinBox_date)
 
-        self.verticalLayout_2.addWidget(self.comboBox_8)
+        self.comboBox_nakshatra_2 = QComboBox(self.gridLayoutWidget)
+        self.comboBox_nakshatra_2.setObjectName(u"comboBox_nakshatra_2")
 
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.lineEdit_2 = QLineEdit(self.gridLayoutWidget)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.verticalLayout_date_preference.addWidget(self.comboBox_nakshatra_2)
 
-        self.verticalLayout_3.addWidget(self.lineEdit_2)
+        self.horizontalLayout_day_week_no = QHBoxLayout()
+        self.horizontalLayout_day_week_no.setObjectName(u"horizontalLayout_day_week_no")
+        self.label_day = QLabel(self.gridLayoutWidget)
+        self.label_day.setObjectName(u"label_day")
+        self.label_day.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.lineEdit_5 = QLineEdit(self.gridLayoutWidget)
-        self.lineEdit_5.setObjectName(u"lineEdit_5")
+        self.horizontalLayout_day_week_no.addWidget(self.label_day)
 
-        self.verticalLayout_3.addWidget(self.lineEdit_5)
+        self.comboBox_day = QComboBox(self.gridLayoutWidget)
+        self.comboBox_day.setObjectName(u"comboBox_day")
 
-        self.lineEdit_4 = QLineEdit(self.gridLayoutWidget)
-        self.lineEdit_4.setObjectName(u"lineEdit_4")
+        self.horizontalLayout_day_week_no.addWidget(self.comboBox_day)
 
-        self.verticalLayout_3.addWidget(self.lineEdit_4)
+        self.label_week = QLabel(self.gridLayoutWidget)
+        self.label_week.setObjectName(u"label_week")
+        self.label_week.setLayoutDirection(Qt.LeftToRight)
+        self.label_week.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.lineEdit_3 = QLineEdit(self.gridLayoutWidget)
-        self.lineEdit_3.setObjectName(u"lineEdit_3")
+        self.horizontalLayout_day_week_no.addWidget(self.label_week)
 
-        self.verticalLayout_3.addWidget(self.lineEdit_3)
+        self.spinBox_week_no = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_week_no.setObjectName(u"spinBox_week_no")
+        self.spinBox_week_no.setCursor(QCursor(Qt.ArrowCursor))
+        self.spinBox_week_no.setMinimum(1)
+        self.spinBox_week_no.setMaximum(6)
+        self.spinBox_week_no.setValue(1)
 
+        self.horizontalLayout_day_week_no.addWidget(self.spinBox_week_no)
 
-        self.verticalLayout_2.addLayout(self.verticalLayout_3)
+        self.horizontalLayout_day_week_no.setStretch(1, 1)
+        self.horizontalLayout_day_week_no.setStretch(3, 1)
 
+        self.verticalLayout_date_preference.addLayout(self.horizontalLayout_day_week_no)
 
-        self.gridLayout.addLayout(self.verticalLayout_2, 8, 2, 1, 1)
+        self.comboBox_tithi = QComboBox(self.gridLayoutWidget)
+        self.comboBox_tithi.setObjectName(u"comboBox_tithi")
+
+        self.verticalLayout_date_preference.addWidget(self.comboBox_tithi)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_date_preference, 7, 2, 1, 1)
+
+        self.comboBox_nakshatra = QComboBox(self.gridLayoutWidget)
+        self.comboBox_nakshatra.setObjectName(u"comboBox_nakshatra")
+
+        self.gridLayout.addWidget(self.comboBox_nakshatra, 3, 2, 1, 1)
+
+
+        self.label_rashi = QLabel(self.gridLayoutWidget)
+        self.label_rashi.setObjectName(u"label_rashi")
+
+        self.gridLayout.addWidget(self.label_rashi, 2, 0, 1, 1)
+
+        self.comboBox_rashi = QComboBox(self.gridLayoutWidget)
+        self.comboBox_rashi.setObjectName(u"comboBox_rashi")
+
+        self.gridLayout.addWidget(self.comboBox_rashi, 2, 2, 1, 1)
+
+        self.label_gotra = QLabel(self.gridLayoutWidget)
+        self.label_gotra.setObjectName(u"label_gotra")
+
+        self.gridLayout.addWidget(self.label_gotra, 4, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 999, 26))
+        self.menubar.setGeometry(QRect(0, 0, 1079, 26))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -277,28 +320,101 @@ class Ui_MainWindow(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
+        self.date_basis_radio_callback(4)
+        self.connectUi()
+        self.add_options()
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Rashi", None))
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"Address", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Seva date basis", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Name", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Seva start", None))
-        self.radioButton.setText(QCoreApplication.translate("MainWindow", u"Date", None))
-        self.radioButton_3.setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
-        self.radioButton_4.setText(QCoreApplication.translate("MainWindow", u"Week number and day", None))
-        self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"Tithi", None))
-        self.radioButton_5.setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Gotra", None))
-        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Day", None))
-        self.label_13.setText(QCoreApplication.translate("MainWindow", u"Week number", None))
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Seva date preference", None))
-        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Does this sevadar belong to a group?", None))
-        self.radioButton_6.setText(QCoreApplication.translate("MainWindow", u"Yes", None))
-        self.radioButton_7.setText(QCoreApplication.translate("MainWindow", u"No", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Month", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Year", None))
+        self.label_date.setText(QCoreApplication.translate("MainWindow", u"Seva date preference", None))
+        self.label_start_month.setText(QCoreApplication.translate("MainWindow", u"Month", None))
+        self.label_star_year.setText(QCoreApplication.translate("MainWindow", u"Year", None))
+        self.label_nakshatra.setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
+        self.radioButton_date_basis[0].setText(QCoreApplication.translate("MainWindow", u"Date", None))
+        self.radioButton_date_basis[1].setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
+        self.radioButton_date_basis[2].setText(QCoreApplication.translate("MainWindow", u"Week number and day", None))
+        self.radioButton_date_basis[3].setText(QCoreApplication.translate("MainWindow", u"Tithi", None))
+        self.radioButton_date_basis[4].setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
+        self.label_name.setText(QCoreApplication.translate("MainWindow", u"Name", None))
+        self.label_group.setText(QCoreApplication.translate("MainWindow", u"Does this sevadar belong to a group?", None))
+        self.label_basis.setText(QCoreApplication.translate("MainWindow", u"Seva date basis", None))
+        self.label_address.setText(QCoreApplication.translate("MainWindow", u"Address", None))
+        self.radioButton_group_yes.setText(QCoreApplication.translate("MainWindow", u"Yes", None))
+        self.radioButton_group_no.setText(QCoreApplication.translate("MainWindow", u"No", None))
+        self.label_seva_start.setText(QCoreApplication.translate("MainWindow", u"Seva start", None))
+        self.label_day.setText(QCoreApplication.translate("MainWindow", u"Day", None))
+        self.label_week.setText(QCoreApplication.translate("MainWindow", u"Week number", None))
+        self.label_rashi.setText(QCoreApplication.translate("MainWindow", u"Rashi", None))
+        self.label_gotra.setText(QCoreApplication.translate("MainWindow", u"Gotra", None))
     # retranslateUi
 
+    def connectUi(self):
+        self.radioButton_date_basis[0].clicked.connect(lambda: self.date_basis_radio_callback(0))
+        self.radioButton_date_basis[1].clicked.connect(lambda: self.date_basis_radio_callback(1))
+        self.radioButton_date_basis[2].clicked.connect(lambda: self.date_basis_radio_callback(2))
+        self.radioButton_date_basis[3].clicked.connect(lambda: self.date_basis_radio_callback(3))
+        self.radioButton_date_basis[4].clicked.connect(lambda: self.date_basis_radio_callback(4))
+
+        self.radioButton_group_yes.clicked.connect(lambda: self.group_yes_or_no_callback(False))
+        self.radioButton_group_no.clicked.connect(lambda: self.group_yes_or_no_callback(True))
+
+        self.buttonBox.accepted.connect(lambda: actions.add_sevadar({
+            "name":self.lineEdit_name.text(),
+            "rashi": self.comboBox_rashi.currentIndex(),
+            "nakshatra": self.comboBox_nakshatra.currentIndex(),
+            "gotra": self.comboBox_gotra.currentIndex(),
+            "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d")
+            }))
+
+
+
+    def date_basis_radio_callback(self,index):
+        setHidden_values= [True]*5
+        setHidden_values[index] = False
+
+        self.spinBox_date.setHidden(setHidden_values[0])
+
+        self.comboBox_nakshatra_2.setHidden(setHidden_values[1])
+
+        self.label_day.setHidden(setHidden_values[2])
+        self.comboBox_day.setHidden(setHidden_values[2])
+        self.label_week.setHidden(setHidden_values[2])
+        self.spinBox_week_no.setHidden(setHidden_values[2])
+
+        self.comboBox_tithi.setHidden(setHidden_values[3])
+
+    def group_yes_or_no_callback(self,state):
+        self.comboBox_address.setHidden(state)
+
+        for i in self.lineEdit_address:
+            i.setHidden(not state)
+
+    
+    def add_options(self):
+        self.comboBox_rashi.addItems(SanskritNames.rashis.values())
+        self.comboBox_nakshatra.addItems(SanskritNames.nakshatras.values())
+        self.comboBox_gotra.addItems(SanskritNames.gotras.values())
+        self.comboBox_tithi.addItems(SanskritNames.tithis.values())
+        self.comboBox_start_month.addItems(SanskritNames.months.values())
+        self.comboBox_day.addItems(SanskritNames.vaaras.values())
+        self.comboBox_nakshatra_2.addItems(SanskritNames.nakshatras.values())
+
+        
+
+
+        
+
+
+
+
+
+        
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

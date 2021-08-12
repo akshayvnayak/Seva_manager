@@ -1,56 +1,23 @@
-# -*- coding: UTF-8 -*-
-# # from panchanga import panchanga
-# # mangaluru = panchanga.Place(12.91723,74.85603,+5.5)
-# # def tithi(dd,mm,yyyy):
-# #     date = panchanga.gregorian_to_jd(panchanga.Date(yyyy,mm,dd))
-# #     return panchanga.tithi(date,mangaluru)
+from PyQt5.Qt import QApplication
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtWidgets import QWidget, QLineEdit
 
-# print(tithi(14,9,2000))
+import sys
 
+class MyWidget(QWidget):
+    def __init__(self, parent=None):
+        super(QWidget, self).__init__(parent)
+        self.le_input = QLineEdit(self)
 
-# Python program to create
-# a pdf file
+        reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
+        input_validator = QRegExpValidator(reg_ex, self.le_input)
+        self.le_input.setValidator(input_validator)
 
-from __future__ import print_function
-from fpdf import FPDF
+if __name__ == '__main__':
+    a = QApplication(sys.argv)
 
+    w = MyWidget()
+    w.show()
 
-print("ಸೀತಾರಾಮಾಂಜನೇ".encode(encoding="ascii",errors="xmlcharrefreplace"))
-# save FPDF() class into a
-# variable pdf
-pdf = FPDF()
-
-# Add a page
-pdf.add_page()
-
-# set style and size of font
-# # that you want in the pdf
-pdf.add_font("BRHKan01","",'./fonts/BRHKan01.ttf',uni=True)
-pdf.set_font("BRHKan01", size = 15)
-
-pdf.add_font('gargi', '', './fonts/gargi.ttf', uni=True) 
-pdf.set_font('gargi', '', 14)
-# pdf.write(8,u'PÉÆmÉ ²æÃ ¹ÃvÁgÁªÀiÁAd£ÉÃ')
-# pdf.write(8, ('Hindi: नमस्ते दुनिया ಕೊಟೆ ಶ್ರೀ ಸೀತಾರಾಮಾಂಜನೇ'.encode(encoding="ascii",errors="xmlcharrefreplace")))
-# create a cell
-pdf.cell(200, 10, txt = 'Hindi: नमस्ते दुनिया ಕೊಟೆ ಶ್ರೀ ಸೀತಾರಾಮಾಂಜನೇ'.encode(encoding="ascii",errors="xmlcharrefreplace"),ln = 1, align = 'C')
-
-# # add another cell
-# pdf.cell(200, 10, txt = u"A C ಕೊಟೆ ಶ್ರೀ ಸೀತಾರಾಮಾಂಜನೇಯ geeks.",
-# 		ln = 2, align = 'C')
-
-# save the pdf with name .pdf
-pdf.output("GFG.pdf")
-
-
-# import speech_recognition as sr
-# recognizer = sr.Recognizer()
-# with sr.Microphone() as inputs:
-#     print("Please speak now")
-#     listening = recognizer.listen(inputs)
-#     print("Analysing...")
-#     try:
-#         print("Did you say: "+recognizer.recognize_google(listening,language = "kn-IN"))
-#         ent = (recognizer.recognize_google(listening,language = "kn-IN"))
-#     except:
-#          print("please speak again")
+    a.exec()
