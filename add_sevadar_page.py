@@ -7,13 +7,94 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-import PyQt5
+import sqlite3
+from collections import namedtuple
 import SanskritNames
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
-import actions
+
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+def add_sevadar(sevadar_details_dict):
+    sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(*sevadar_details_dict.values())
+    print(sevadar_details)
+    try:
+        conn = sqlite3.connect('data\Seva_manager.db')
+        # conn.row_factory = dict_factory
+        print("Opened database successfully")        
+        cur = conn.cursor()
+        cur.execute(f"""
+            INSERT INTO Sevadars(name,rashi,nakshatra,gotra)
+            VALUES("{sevadar_details.name}",{sevadar_details.rashi},{sevadar_details.nakshatra},{sevadar_details.gotra});
+        """)
+        conn.commit()
+        cur.execute('SELECT last_insert_rowid()')
+        sevadar_id = cur.fetchone()[0]
+        print(sevadar_id)
+        cur.execute(f"""
+            INSERT INTO SevaStartMonths
+            VALUES({sevadar_id},'{sevadar_details.start_month}');
+        """)
+
+        if sevadar_details.date_basis != 4:
+            cur.execute(f"""
+                INSERT INTO PoojaDates
+                VALUES({sevadar_id},{sevadar_details.date_basis},{sevadar_details.date[sevadar_details.date_basis]});
+            """)
+
+        address_id = sevadar_details.address_id
+        if sevadar_details.new_address_flag:            
+            cur.execute(f"""
+                INSERT INTO Addresses (line1,line2,line3,line4)
+                VALUES('{sevadar_details.address[0]}','{sevadar_details.address[1]}','{sevadar_details.address[2]}','{sevadar_details.address[3]}');
+            """)
+            conn.commit()
+            cur.execute('SELECT last_insert_rowid()')
+            address_id = cur.fetchone()[0]
+        
+        if sevadar_details.group_flag:
+            conn.commit()
+            cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
+            if cur.fetchone() != None:
+                cur.execute(f'''
+                    INSERT INTO GroupDetails(address_id)
+                    VALUES({address_id});
+                ''')
+                conn.commit()
+                cur.execute(f'SELECT last_insert_rowid();')
+                group_id = cur.fetchone()[0]
+            else:
+                group_id = cur.fetchone()[0]
+            cur.execute(f'''
+                INSERT INTO Groups
+                VALUES({group_id},{sevadar_id})
+            ''')
+        else:
+            cur.execute(f"""
+                INSERT INTO SevadarAddress
+                VALUES({address_id},{sevadar_id});
+            """)
+        
+            
+        conn.commit()
+        # cur.execute(f"""SELECT * FROM Sevadars
+        # NATURAL JOIN SevaStartMonths
+        # NATURAL JOIN PoojaDates
+        # NATURAL JOIN SevadarAddress
+        # NATURAL JOIN Addresses;""")
+        # for row in cur.fetchall():
+        #     print(row)
+        # print(cur.fetchall())
+    except Exception as e:
+        print("Database error:",e)
+    finally:
+        conn.close()
 
 
 class Ui_MainWindow(object):
@@ -33,6 +114,7 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setGeometry(QRect(80, 80, 814, 531))
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setSizeConstraint(QLayout.SetMinimumSize)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.label_date = QLabel(self.gridLayoutWidget)
         self.label_date.setObjectName(u"label_date")
@@ -90,10 +172,9 @@ class Ui_MainWindow(object):
             
             self.horizontalLayout__date_basis.addWidget(self.radioButton_date_basis[i])
 
-            
             self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i],i)
 
-        
+        self.radioButton_date_basis[0].setChecked(True)
         
 
 
@@ -134,7 +215,12 @@ class Ui_MainWindow(object):
         self.label_group = QLabel(self.gridLayoutWidget)
         self.label_group.setObjectName(u"label_group")
 
-        self.gridLayout.addWidget(self.label_group, 8, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_group, 9, 0, 1, 1)
+
+        self.label_existing_address = QLabel(self.gridLayoutWidget)
+        self.label_existing_address.setObjectName(u"label_existing_address")
+
+        self.gridLayout.addWidget(self.label_existing_address, 8, 0, 1, 1)
 
         self.label_basis = QLabel(self.gridLayoutWidget)
         self.label_basis.setObjectName(u"label_basis")
@@ -149,7 +235,7 @@ class Ui_MainWindow(object):
         self.label_address = QLabel(self.gridLayoutWidget)
         self.label_address.setObjectName(u"label_address")
 
-        self.gridLayout.addWidget(self.label_address, 9, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_address, 10, 0, 1, 1)
 
         self.lineEdit_name = QLineEdit(self.gridLayoutWidget)
         self.lineEdit_name.setObjectName(u"lineEdit_name")
@@ -174,6 +260,7 @@ class Ui_MainWindow(object):
             self.lineEdit_address[i].setEnabled(True)
 
             self.verticalLayout_address_lines.addWidget(self.lineEdit_address[i])
+        
 
         # self.lineEdit_address1 = QLineEdit(self.gridLayoutWidget)
         # self.lineEdit_address1.setObjectName(u"lineEdit_address1")
@@ -203,24 +290,51 @@ class Ui_MainWindow(object):
         self.verticalLayout_address.addLayout(self.verticalLayout_address_lines)
 
 
-        self.gridLayout.addLayout(self.verticalLayout_address, 9, 2, 1, 1)
+        self.gridLayout.addLayout(self.verticalLayout_address, 10, 2, 1, 1)
+        
 
         self.horizontalLayout_group_yes_no = QHBoxLayout()
         self.horizontalLayout_group_yes_no.setObjectName(u"horizontalLayout_group_yes_no")
+
+        self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
+
         self.radioButton_group_yes = QRadioButton(self.gridLayoutWidget)
         self.radioButton_group_yes.setObjectName(u"radioButton_group_yes")
         self.radioButton_group_yes.setContextMenuPolicy(Qt.DefaultContextMenu)
         self.radioButton_group_yes.setChecked(True)
 
+        self.radioButtonGroup_new_address.addButton(self.radioButton_group_yes)
         self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_yes)
 
         self.radioButton_group_no = QRadioButton(self.gridLayoutWidget)
         self.radioButton_group_no.setObjectName(u"radioButton_group_no")
 
+        self.radioButtonGroup_new_address.addButton(self.radioButton_group_no)
         self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_no)
 
+        self.gridLayout.addLayout(self.horizontalLayout_group_yes_no, 9, 2, 1, 1)
 
-        self.gridLayout.addLayout(self.horizontalLayout_group_yes_no, 8, 2, 1, 1)
+        self.horizontalLayout_new_address = QHBoxLayout()
+        self.horizontalLayout_new_address.setObjectName(u"horizontalLayout_new_address")
+
+        self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
+
+        self.radioButton_new_address = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_new_address.setObjectName(u"radioButton_new_address")
+        self.radioButton_new_address.setContextMenuPolicy(Qt.DefaultContextMenu)
+        self.radioButton_new_address.setChecked(True)
+
+        self.radioButtonGroup_new_address.addButton(self.radioButton_new_address)
+        self.horizontalLayout_new_address.addWidget(self.radioButton_new_address)
+
+        self.radioButton_existing_address = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_existing_address.setObjectName(u"radioButton_existing_address")
+
+        self.radioButtonGroup_new_address.addButton(self.radioButton_existing_address)
+        self.horizontalLayout_new_address.addWidget(self.radioButton_existing_address)
+
+        self.gridLayout.addLayout(self.horizontalLayout_new_address, 8, 2, 1, 1)
+
 
         self.label_seva_start = QLabel(self.gridLayoutWidget)
         self.label_seva_start.setObjectName(u"label_seva_start")
@@ -338,10 +452,17 @@ class Ui_MainWindow(object):
         self.radioButton_date_basis[4].setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
         self.label_name.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.label_group.setText(QCoreApplication.translate("MainWindow", u"Does this sevadar belong to a group?", None))
+
+        self.label_existing_address.setText(QCoreApplication.translate("MainWindow", u"New address or Existing address?", None))
+
         self.label_basis.setText(QCoreApplication.translate("MainWindow", u"Seva date basis", None))
         self.label_address.setText(QCoreApplication.translate("MainWindow", u"Address", None))
         self.radioButton_group_yes.setText(QCoreApplication.translate("MainWindow", u"Yes", None))
         self.radioButton_group_no.setText(QCoreApplication.translate("MainWindow", u"No", None))
+
+        self.radioButton_new_address.setText(QCoreApplication.translate("MainWindow", u"New address", None))
+        self.radioButton_existing_address.setText(QCoreApplication.translate("MainWindow", u"Existing address", None))
+
         self.label_seva_start.setText(QCoreApplication.translate("MainWindow", u"Seva start", None))
         self.label_day.setText(QCoreApplication.translate("MainWindow", u"Day", None))
         self.label_week.setText(QCoreApplication.translate("MainWindow", u"Week number", None))
@@ -350,18 +471,20 @@ class Ui_MainWindow(object):
     # retranslateUi
 
     def connectUi(self):
-    #     self.radioButton_date_basis[0].clicked.connect(lambda: self.date_basis_radio_callback(0))
-    #     self.radioButton_date_basis[1].clicked.connect(lambda: self.date_basis_radio_callback(1))
-    #     self.radioButton_date_basis[2].clicked.connect(lambda: self.date_basis_radio_callback(2))
-    #     self.radioButton_date_basis[3].clicked.connect(lambda: self.date_basis_radio_callback(3))
-    #     self.radioButton_date_basis[4].clicked.connect(lambda: self.date_basis_radio_callback(4))
         for i in self.radioButtonGroup_date_basis.buttons():
             i.clicked.connect(lambda: self.date_basis_radio_callback(self.radioButtonGroup_date_basis.checkedId()))
+        self.date_basis_radio_callback(self.radioButtonGroup_date_basis.checkedId())
 
-        self.radioButton_group_yes.clicked.connect(lambda: self.group_yes_or_no_callback(False))
-        self.radioButton_group_no.clicked.connect(lambda: self.group_yes_or_no_callback(True))
+        # self.radioButton_group_yes.clicked.connect(lambda: self.group_yes_or_no_callback(False))
+        # self.radioButton_group_no.clicked.connect(lambda: self.group_yes_or_no_callback(True))
+        # self.group_yes_or_no_callback(False)
 
-        self.buttonBox.accepted.connect(lambda: actions.add_sevadar({
+        
+        self.radioButton_new_address.clicked.connect(lambda: self.new_address_callback(True))
+        self.radioButton_existing_address.clicked.connect(lambda: self.new_address_callback(False))
+        self.new_address_callback(True)
+
+        self.buttonBox.accepted.connect(lambda: add_sevadar({
             "name":self.lineEdit_name.text(),
             "rashi": self.comboBox_rashi.currentIndex(),
             "nakshatra": self.comboBox_nakshatra.currentIndex(),
@@ -373,10 +496,13 @@ class Ui_MainWindow(object):
                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
                     self.comboBox_tithi.currentIndex(),
                     None),
+            "new_address_flag":self.radioButton_new_address.isChecked(),
             "group_flag":self.radioButton_group_yes.isChecked(),
-            "group_id":self.comboBox_address.currentIndex(),
+            "address_id":int(self.comboBox_address.currentText()[0]),
             "address":[i.text() for i in self.lineEdit_address]
             }))
+
+        self.buttonBox.rejected.connect(lambda: print(self.comboBox_address.currentText()))
 
     def date_basis_radio_callback_(self,data):
         print(data)
@@ -396,11 +522,17 @@ class Ui_MainWindow(object):
 
         self.comboBox_tithi.setHidden(setHidden_values[3])
 
-    def group_yes_or_no_callback(self,state):
+    def new_address_callback(self, state):
         self.comboBox_address.setHidden(state)
 
         for i in self.lineEdit_address:
             i.setHidden(not state)
+        
+    # def group_yes_or_no_callback(self,state):
+    #     self.comboBox_address.setHidden(state)
+
+    #     for i in self.lineEdit_address:
+    #         i.setHidden(not state)
 
     
     def add_options(self):
@@ -412,21 +544,18 @@ class Ui_MainWindow(object):
         self.comboBox_day.addItems(SanskritNames.vaaras.values())
         self.comboBox_nakshatra_2.addItems(SanskritNames.nakshatras.values())
 
-
-
-def add_sevadar():
-    pass
-
-        
-
-
-        
-
-
-
-
-
-        
+        try:
+            conn = sqlite3.connect('data\Seva_manager.db')
+            cur = conn.cursor()
+            addresses=cur.execute('SELECT * FROM Addresses').fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            conn.close()
+        # print(addresses)
+        for address in addresses:
+            self.comboBox_address.addItem(str(address)[1:-1])
+    
 
 if __name__ == "__main__":
     import sys
