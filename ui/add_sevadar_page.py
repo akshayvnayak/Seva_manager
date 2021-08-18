@@ -7,6 +7,7 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+import PyQt5
 import SanskritNames
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -90,7 +91,7 @@ class Ui_MainWindow(object):
             self.horizontalLayout__date_basis.addWidget(self.radioButton_date_basis[i])
 
             
-            self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i])
+            self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i],i)
 
         
         
@@ -349,11 +350,13 @@ class Ui_MainWindow(object):
     # retranslateUi
 
     def connectUi(self):
-        self.radioButton_date_basis[0].clicked.connect(lambda: self.date_basis_radio_callback(0))
-        self.radioButton_date_basis[1].clicked.connect(lambda: self.date_basis_radio_callback(1))
-        self.radioButton_date_basis[2].clicked.connect(lambda: self.date_basis_radio_callback(2))
-        self.radioButton_date_basis[3].clicked.connect(lambda: self.date_basis_radio_callback(3))
-        self.radioButton_date_basis[4].clicked.connect(lambda: self.date_basis_radio_callback(4))
+    #     self.radioButton_date_basis[0].clicked.connect(lambda: self.date_basis_radio_callback(0))
+    #     self.radioButton_date_basis[1].clicked.connect(lambda: self.date_basis_radio_callback(1))
+    #     self.radioButton_date_basis[2].clicked.connect(lambda: self.date_basis_radio_callback(2))
+    #     self.radioButton_date_basis[3].clicked.connect(lambda: self.date_basis_radio_callback(3))
+    #     self.radioButton_date_basis[4].clicked.connect(lambda: self.date_basis_radio_callback(4))
+        for i in self.radioButtonGroup_date_basis.buttons():
+            i.clicked.connect(lambda: self.date_basis_radio_callback(self.radioButtonGroup_date_basis.checkedId()))
 
         self.radioButton_group_yes.clicked.connect(lambda: self.group_yes_or_no_callback(False))
         self.radioButton_group_no.clicked.connect(lambda: self.group_yes_or_no_callback(True))
@@ -363,10 +366,20 @@ class Ui_MainWindow(object):
             "rashi": self.comboBox_rashi.currentIndex(),
             "nakshatra": self.comboBox_nakshatra.currentIndex(),
             "gotra": self.comboBox_gotra.currentIndex(),
-            "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d")
+            "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d"),
+            "date_basis":self.radioButtonGroup_date_basis.checkedId(),
+            "date":(self.spinBox_date.value(),
+                    self.comboBox_nakshatra_2.currentIndex(),
+                    self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
+                    self.comboBox_tithi.currentIndex(),
+                    None),
+            "group_flag":self.radioButton_group_yes.isChecked(),
+            "group_id":self.comboBox_address.currentIndex(),
+            "address":[i.text() for i in self.lineEdit_address]
             }))
 
-
+    def date_basis_radio_callback_(self,data):
+        print(data)
 
     def date_basis_radio_callback(self,index):
         setHidden_values= [True]*5
@@ -398,6 +411,11 @@ class Ui_MainWindow(object):
         self.comboBox_start_month.addItems(SanskritNames.months.values())
         self.comboBox_day.addItems(SanskritNames.vaaras.values())
         self.comboBox_nakshatra_2.addItems(SanskritNames.nakshatras.values())
+
+
+
+def add_sevadar():
+    pass
 
         
 
