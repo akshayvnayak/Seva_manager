@@ -26,6 +26,7 @@ Use Swiss ephemeris to calculate tithi, nakshatra, etc.
 """
 
 from __future__ import division
+import datetime
 from math import floor, ceil
 from collections import namedtuple as struct
 import swisseph as swe
@@ -398,6 +399,8 @@ def masa_tests():
   print(masa(may20, helsinki))   # Vaisakha [2]
   print(masa(may21, helsinki))   # Jyestha [3]
 
+
+mangaluru = Place(12.91723,74.85603,+5.5)
 if __name__ == "__main__":
   bangalore = Place(12.972, 77.594, +5.5)
   mangaluru = Place(12.91723,74.85603,+5.5)
@@ -409,9 +412,10 @@ if __name__ == "__main__":
   date4 = gregorian_to_jd(Date(2009, 6, 21))
   apr_8 = gregorian_to_jd(Date(2010, 4, 8))
   apr_10 = gregorian_to_jd(Date(2010, 4, 10))
+  # print(gregorian_to_jd(datetime.date.today()))
   for i in range(1,31):
     date = gregorian_to_jd(Date(2019,4,i))
-    print(i,nakshatra(date,mangaluru))#tithi(date,mangaluru),masa(date,mangaluru),samvatsara(date,masa(date,mangaluru)[0]))
+    print(i,nakshatra(date,mangaluru),tithi(date,mangaluru),masa(date,mangaluru),samvatsara(date,masa(date,mangaluru)[0]))
   # all_tests()
   # tithi_tests()
   # nakshatra_tests()

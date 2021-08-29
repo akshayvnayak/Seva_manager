@@ -1,23 +1,46 @@
-from PyQt5.Qt import QApplication
-from PyQt5.QtCore import QRegExp
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import QWidget, QLineEdit
+from thirdparty.panchanga import panchanga
+import swisseph as swe
+import datetime
+import pandas as pd
+# print(panchanga.gregorian_to_jd( datetime.date.today()))
+import sqlite3
+import SanskritNames as sdict
 
-import sys
+m = panchanga.Place(12.91723,74.85603,+5.5)
+# date = panchanga.gregorian_to_jd(panchanga.Date(2021,7,19))
+# while date != panchanga.gregorian_to_jd(datetime.date.today()):
+#     print(panchanga.jd_to_gregorian(date),panchanga.tithi(date,m),panchanga.masa(date,m),panchanga.samvatsara(date,panchanga.masa(date,m)[0]),panchanga.nakshatra(date,m))
+#     date+=1
 
-class MyWidget(QWidget):
-    def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
-        self.le_input = QLineEdit(self)
+# from calendar import calendar, monthrange
+# import calendar
 
-        reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
-        input_validator = QRegExpValidator(reg_ex, self.le_input)
-        self.le_input.setValidator(input_validator)
+# print(calendar.month_name())
 
-if __name__ == '__main__':
-    a = QApplication(sys.argv)
+con = sqlite3.connect("data/Seva_manager.db")
 
-    w = MyWidget()
-    w.show()
+# Load the data into a DataFrame
+surveys_df = pd.read_sql_query("SELECT * from sevadardetails", con)
+print(surveys_df[surveys_df.start_yyyymm > '2021-02'].start_yyyymm)
+con.close()
 
-    a.exec()
+con = sqlite3.connect("data.panchanga_trial.db")
+
+date = panchanga.gregorian_to_jd(panchanga.Date(2020,8,19))
+
+def normaldate(jd):
+    a = panchanga.jd_to_gregorian(jd)
+    return str(a[0])+'-'+str(a[1])+'-'+str(a[2])
+
+tithi = lambda jd: [sdict.tithis[str(t[0])] for t in panchanga.tithi(jd,panchanga.mangaluru)]
+
+masa = lambda jd: sdict.masas(str(panchanga.masa(jd,panchanga.mangaluru)[0]))
+
+samvatsara = lambda jd
+
+
+while date != panchanga.gregorian_to_jd(datetime.date.today()):
+    tithi = 
+    print(panchanga.jd_to_gregorian(date),panchanga.tithi(date,m),panchanga.masa(date,m),panchanga.samvatsara(date,panchanga.masa(date,m)[0]),panchanga.nakshatra(date,m))
+
+    date+=1

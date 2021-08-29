@@ -12,7 +12,9 @@ try:
                 name        TEXT,
                 rashi       INTEGER,
                 nakshatra   INTEGER,
-                gotra       INTEGER
+                gotra       INTEGER,
+                pooja_basis INTEGER,
+                pooja_date  INTEGER
             );
         '''
     )
@@ -89,12 +91,24 @@ try:
         '''
     )
     conn.commit()
+    # cur.execute(
+    #     '''
+    #         CREATE TABLE IF NOT EXISTS PoojaDates(
+    #             sevadar_id  INTEGER,
+    #             pooja_basis INTEGER,
+    #             pooja_date  INTEGER,
+    #             FOREIGN KEY (sevadar_id)
+    #                 REFERENCES Sevadars(sevadar_id)
+    #                     ON UPDATE CASCADE
+    #                     ON DELETE CASCADE
+    #         );
+    #     '''
+    # )
+    # conn.commit()
     cur.execute(
         '''
-            CREATE TABLE IF NOT EXISTS PoojaDates(
-                sevadar_id  INTEGER,
-                pooja_basis INTEGER,
-                pooja_date  INTEGER,
+            CREATE TABLE IF NOT EXISTS SevadarsFlexible(
+                sevadar_id          INTEGER,
                 FOREIGN KEY (sevadar_id)
                     REFERENCES Sevadars(sevadar_id)
                         ON UPDATE CASCADE

@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-################################################################################
-## Form generated from reading UI file 'testoNleQq.ui'
-##
-## Created by: Qt User Interface Compiler version 5.15.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
 import sqlite3
 from collections import namedtuple
 import SanskritNames
@@ -14,6 +7,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
+
+import traceback
 
 def dict_factory(cursor, row):
     d = {}
@@ -30,26 +25,23 @@ def add_sevadar(sevadar_details_dict):
         print("Opened database successfully")        
         cur = conn.cursor()
         cur.execute(f"""
-            INSERT INTO Sevadars(name,rashi,nakshatra,gotra)
-            VALUES("{sevadar_details.name}",{sevadar_details.rashi},{sevadar_details.nakshatra},{sevadar_details.gotra});
+            INSERT INTO Sevadars(name,rashi,nakshatra,gotra,pooja_basis,pooja_date)
+            VALUES("{sevadar_details.name}",{sevadar_details.rashi},{sevadar_details.nakshatra},{sevadar_details.gotra},{sevadar_details.date_basis},{sevadar_details.date[sevadar_details.date_basis]});
         """)
         conn.commit()
         cur.execute('SELECT last_insert_rowid()')
         sevadar_id = cur.fetchone()[0]
         print(sevadar_id)
+        if sevadar_details.flexible_flag:
+            cur.execute(f"INSERT INTO SevadarsFlexible VALUES ({sevadar_id})")
         cur.execute(f"""
             INSERT INTO SevaStartMonths
             VALUES({sevadar_id},'{sevadar_details.start_month}');
         """)
 
-        if sevadar_details.date_basis != 4:
-            cur.execute(f"""
-                INSERT INTO PoojaDates
-                VALUES({sevadar_id},{sevadar_details.date_basis},{sevadar_details.date[sevadar_details.date_basis]});
-            """)
 
         address_id = sevadar_details.address_id
-        if sevadar_details.new_address_flag:            
+        if sevadar_details.new_address_flag:
             cur.execute(f"""
                 INSERT INTO Addresses (line1,line2,line3,line4)
                 VALUES('{sevadar_details.address[0]}','{sevadar_details.address[1]}','{sevadar_details.address[2]}','{sevadar_details.address[3]}');
@@ -61,7 +53,8 @@ def add_sevadar(sevadar_details_dict):
         if sevadar_details.group_flag:
             conn.commit()
             cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
-            if cur.fetchone() != None:
+            existing_group = cur.fetchone()
+            if existing_group == None:
                 cur.execute(f'''
                     INSERT INTO GroupDetails(address_id)
                     VALUES({address_id});
@@ -70,15 +63,15 @@ def add_sevadar(sevadar_details_dict):
                 cur.execute(f'SELECT last_insert_rowid();')
                 group_id = cur.fetchone()[0]
             else:
-                group_id = cur.fetchone()[0]
+                group_id = existing_group[0]
             cur.execute(f'''
                 INSERT INTO Groups
-                VALUES({group_id},{sevadar_id})
+                VALUES({sevadar_id},{group_id})
             ''')
         else:
             cur.execute(f"""
                 INSERT INTO SevadarAddress
-                VALUES({address_id},{sevadar_id});
+                VALUES({sevadar_id},{address_id});
             """)
         
             
@@ -93,6 +86,7 @@ def add_sevadar(sevadar_details_dict):
         # print(cur.fetchall())
     except Exception as e:
         print("Database error:",e)
+        print(traceback.format_exc())
     finally:
         conn.close()
 
@@ -166,7 +160,7 @@ class Ui_MainWindow(object):
 
         self.radioButton_date_basis = []
         self.radioButtonGroup_date_basis = QtWidgets.QButtonGroup(MainWindow)
-        for i in range(5):
+        for i in range(4):
             self.radioButton_date_basis.append(QRadioButton(self.gridLayoutWidget))
             self.radioButton_date_basis[i].setObjectName("radioButton_date_basis_"+str(i))
             
@@ -175,6 +169,11 @@ class Ui_MainWindow(object):
             self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i],i)
 
         self.radioButton_date_basis[0].setChecked(True)
+
+        self.checkBox_flexible = QCheckBox(self.gridLayoutWidget)
+        self.checkBox_flexible.setObjectName(u"checkBox_flexible")
+
+        self.horizontalLayout__date_basis.addWidget(self.checkBox_flexible)
         
 
 
@@ -435,7 +434,6 @@ class Ui_MainWindow(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
-        self.date_basis_radio_callback(4)
         self.connectUi()
         self.add_options()
 
@@ -449,7 +447,7 @@ class Ui_MainWindow(object):
         self.radioButton_date_basis[1].setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
         self.radioButton_date_basis[2].setText(QCoreApplication.translate("MainWindow", u"Week number and day", None))
         self.radioButton_date_basis[3].setText(QCoreApplication.translate("MainWindow", u"Tithi", None))
-        self.radioButton_date_basis[4].setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
+        self.checkBox_flexible.setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
         self.label_name.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.label_group.setText(QCoreApplication.translate("MainWindow", u"Does this sevadar belong to a group?", None))
 
@@ -494,21 +492,19 @@ class Ui_MainWindow(object):
             "date":(self.spinBox_date.value(),
                     self.comboBox_nakshatra_2.currentIndex(),
                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
-                    self.comboBox_tithi.currentIndex(),
-                    None),
+                    self.comboBox_tithi.currentIndex()),
+            "flexible_flag":self.checkBox_flexible.isChecked(),
             "new_address_flag":self.radioButton_new_address.isChecked(),
             "group_flag":self.radioButton_group_yes.isChecked(),
-            "address_id":int(self.comboBox_address.currentText()[0]),
+            "address_id":int(self.comboBox_address.currentText()[0]) if  self.comboBox_address.currentText() != "" else -1 ,
             "address":[i.text() for i in self.lineEdit_address]
             }))
 
-        self.buttonBox.rejected.connect(lambda: print(self.comboBox_address.currentText()))
+        self.buttonBox.rejected.connect()
 
-    def date_basis_radio_callback_(self,data):
-        print(data)
 
     def date_basis_radio_callback(self,index):
-        setHidden_values= [True]*5
+        setHidden_values= [True]*4
         setHidden_values[index] = False
 
         self.spinBox_date.setHidden(setHidden_values[0])
