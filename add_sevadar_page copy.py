@@ -24,7 +24,7 @@ def add_sevadar(sevadar_details_dict):
     try:
         conn = sqlite3.connect('data\Seva_manager.db')
         # conn.row_factory = dict_factory
-        print("Opened database successfully")
+        print("Opened database successfully")        
         cur = conn.cursor()
         cur.execute(f"""
             INSERT INTO Sevadars(name,rashi,nakshatra,gotra,pooja_basis,pooja_date)
@@ -94,15 +94,14 @@ def add_sevadar(sevadar_details_dict):
 
 
 class Ui_MainWindow(QWidget):
-    def __init__(self,window):
+    def __init__(self):
         super().__init__()
-        self.setupUi(window)
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1079, 736)
         MainWindow.setTabShape(QTabWidget.Rounded)
-        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget = QWidget(QScrollArea)
         self.centralwidget.setObjectName(u"centralwidget")
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
@@ -444,7 +443,6 @@ class Ui_MainWindow(QWidget):
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
-        self.MainWindow = MainWindow
         self.connectUi()
         self.add_options()
 
@@ -495,15 +493,15 @@ class Ui_MainWindow(QWidget):
 
         self.buttonBox.accepted.connect(lambda: add_sevadar({
             "name":self.lineEdit_name.text(),
-            "rashi": self.comboBox_rashi.currentIndex()+1,
-            "nakshatra": self.comboBox_nakshatra.currentIndex()+1,
-            "gotra": self.comboBox_gotra.currentIndex()+1,
+            "rashi": self.comboBox_rashi.currentIndex(),
+            "nakshatra": self.comboBox_nakshatra.currentIndex(),
+            "gotra": self.comboBox_gotra.currentIndex(),
             "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d"),
             "date_basis":self.radioButtonGroup_date_basis.checkedId(),
             "date":(self.spinBox_date.value(),
-                    self.comboBox_nakshatra_2.currentIndex()+1,
+                    self.comboBox_nakshatra_2.currentIndex(),
                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
-                    self.comboBox_tithi.currentIndex()+1),
+                    self.comboBox_tithi.currentIndex()),
             "flexible_flag":self.checkBox_flexible.isChecked(),
             "new_address_flag":self.radioButton_new_address.isChecked(),
             "group_flag":self.radioButton_group_yes.isChecked(),
@@ -511,7 +509,7 @@ class Ui_MainWindow(QWidget):
             "address":[i.text() for i in self.lineEdit_address]
             }))
 
-        self.buttonBox.rejected.connect(lambda: self.MainWindow.close())
+        self.buttonBox.rejected.connect(lambda: MainWindow.close())
 
 
     def date_basis_radio_callback(self,index):
@@ -568,7 +566,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow(MainWindow)
-    # ui.setupUi()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

@@ -24,7 +24,7 @@ def calc_panchanga(year,month):
     a['ritu'] = a.apply(lambda row: pan.ritu(row.masa[0]),axis = 1)
     a['ayana'] = a.apply(lambda row: str(month)+str(row.jd) < '0714' and str(month)+str(row.jd) > '0114',axis=1)
     a['samvatsara'] = a.apply(lambda row: pan.samvatsara(row.jd,row.masa[0]),axis = 1)
-    # print(a)
+    print(a)
     return a
 
 def assign_dates(database,year,month):
@@ -147,4 +147,4 @@ def assign_dates(database,year,month):
     finally:
         con.close()
 
-# assign_dates('data/Seva_manager.db',2019,4)
+assign_dates('data/Seva_manager.db',2019,4)

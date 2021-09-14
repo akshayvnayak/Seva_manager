@@ -23,4 +23,8 @@ months = {	'01':'Janauary',
 		'10':'October',
 		'11':'November',
 		'12':'December'		}
-print(rashis)
+pooja_basis = {	0:'Date',
+				1:'Nakshatra',
+				2:'Week no. & Day',
+				3:'Tithi'}
+# print(rashis)
