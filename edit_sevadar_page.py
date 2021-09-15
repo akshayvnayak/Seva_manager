@@ -23,6 +23,8 @@ class Ui ( Ui_MainWindow):
             """)
         except Exception as e:
             print(format_exc())
+        finally:
+            conn.close()
         self.sevadar= cur.fetchall()[0]
         print(self.sevadar)
         self.set_selected_options()
@@ -58,6 +60,7 @@ class Ui ( Ui_MainWindow):
 
         self.radioButton_group_no.setChecked(self.sevadar['group_id'] == None)
 
+        self.buttonBox.accepted.disconnect()
         self.buttonBox.accepted.connect(lambda s_id = self.s_id: edit_sevadar_callback(s_id,self.sevadar,
         {
             "name":self.lineEdit_name.text(),

@@ -48,9 +48,11 @@ class App(QWidget):
             cur.execute(f"""
                 select * from sevadardetails;
             """)
+            sevadars_details = cur.fetchall()
         except Exception as e:
             print(format_exc())
-        sevadars_details = cur.fetchall()
+        finally:
+            conn.close()
         
         #Row count
         self.tableWidget.setRowCount(len(sevadars_details))
