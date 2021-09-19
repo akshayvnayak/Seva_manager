@@ -1,46 +1,41 @@
-from thirdparty.panchanga import panchanga
-import swisseph as swe
-import datetime
-import pandas as pd
-# print(panchanga.gregorian_to_jd( datetime.date.today()))
-import sqlite3
-import SanskritNames as sdict
 
-m = panchanga.Place(12.91723,74.85603,+5.5)
-# date = panchanga.gregorian_to_jd(panchanga.Date(2021,7,19))
-# while date != panchanga.gregorian_to_jd(datetime.date.today()):
-#     print(panchanga.jd_to_gregorian(date),panchanga.tithi(date,m),panchanga.masa(date,m),panchanga.samvatsara(date,panchanga.masa(date,m)[0]),panchanga.nakshatra(date,m))
-#     date+=1
+from fpdf import FPDF
 
-# from calendar import calendar, monthrange
-# import calendar
+pdf = FPDF('P','mm',(210,99))
+# compression is not yet supported in py3k version
+pdf.compress = False
+# Unicode is not yet supported in the py3k version; use windows-1252 standard font
 
-# print(calendar.month_name())
+for i in range(2):
+    name = "Akshay V Nayak"
+    date = '14-09-2000'
+    pno = '1026'
+    pcount = '05'
+    gotra = 'Kashyapa'
 
-con = sqlite3.connect("data/Seva_manager.db")
+    pdf.add_page()
+    pdf.image("template_preperation/invoice.jpg", 0, 0,210,99)
 
-# Load the data into a DataFrame
-surveys_df = pd.read_sql_query("SELECT * from sevadardetails", con)
-print(surveys_df[surveys_df.start_yyyymm > '2021-02'].start_yyyymm)
-con.close()
+    pdf.set_font('Arial', 'B', 13.5)
+    pdf.text(58,39.5,name)
+    pdf.text(128,48.2,pcount)
 
-con = sqlite3.connect("data.panchanga_trial.db")
-
-date = panchanga.gregorian_to_jd(panchanga.Date(2020,8,19))
-
-def normaldate(jd):
-    a = panchanga.jd_to_gregorian(jd)
-    return str(a[0])+'-'+str(a[1])+'-'+str(a[2])
-
-tithi = lambda jd: [sdict.tithis[str(t[0])] for t in panchanga.tithi(jd,panchanga.mangaluru)]
-
-masa = lambda jd: sdict.masas(str(panchanga.masa(jd,panchanga.mangaluru)[0]))
-
-samvatsara = lambda jd
+    pdf.set_font('Arial', '', 13)
+    pdf.text(29,28,pno)
+    pdf.text(163,28,date)
 
 
-while date != panchanga.gregorian_to_jd(datetime.date.today()):
-    tithi = 
-    print(panchanga.jd_to_gregorian(date),panchanga.tithi(date,m),panchanga.masa(date,m),panchanga.samvatsara(date,panchanga.masa(date,m)[0]),panchanga.nakshatra(date,m))
+    pdf.image(f"template_preperation/samvatsaras/{i+1}.jpg", 10, 52.3,h = 7)
+    pdf.image(f"template_preperation/ayanas/{i+1}.jpg", 63, 52.15,h = 7)
+    pdf.image(f"template_preperation/ritus/{i+1}.jpg", 99, 52.2,h = 7)
+    pdf.image(f"template_preperation/maasas/{i+1}.jpg", 133.5, 52.3,h = 7)
+    pdf.image(f"template_preperation/pakshas/{i+1}.jpg", 170.5, 52.2,h = 7)
 
-    date+=1
+    pdf.image(f"template_preperation/tithis/{i+1}.jpg", 14, 61.27,h = 7)
+    pdf.image(f"template_preperation/vaaras/{i+1}.jpg", 50, 61,h = 7)
+
+    pdf.image(f"template_preperation/rashis/{i+1}.jpg", 26, 83,h = 7)
+    pdf.image(f"template_preperation/nakshatras/{i+1}.jpg", 78.5, 83,h = 7)
+    pdf.text(159,87.6,gotra)
+
+pdf.output('out.pdf', 'F')

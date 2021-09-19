@@ -12,14 +12,17 @@ from PyQt5 import QtWidgets
 
 import traceback
 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
+
 def add_sevadar(sevadar_details_dict):
-    sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(*sevadar_details_dict.values())
+    sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(
+        *sevadar_details_dict.values())
     print(sevadar_details)
     try:
         conn = sqlite3.connect('data\Seva_manager.db')
@@ -41,7 +44,6 @@ def add_sevadar(sevadar_details_dict):
             VALUES({sevadar_id},'{sevadar_details.start_month}');
         """)
 
-
         address_id = sevadar_details.address_id
         if sevadar_details.new_address_flag:
             cur.execute(f"""
@@ -51,10 +53,11 @@ def add_sevadar(sevadar_details_dict):
             conn.commit()
             cur.execute('SELECT last_insert_rowid()')
             address_id = cur.fetchone()[0]
-        
+
         if sevadar_details.group_flag:
             conn.commit()
-            cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
+            cur.execute(
+                f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
             existing_group = cur.fetchone()
             if existing_group == None:
                 cur.execute(f'''
@@ -75,8 +78,7 @@ def add_sevadar(sevadar_details_dict):
                 INSERT INTO SevadarAddress
                 VALUES({sevadar_id},{address_id});
             """)
-        
-            
+
         conn.commit()
         # cur.execute(f"""SELECT * FROM Sevadars
         # NATURAL JOIN SevaStartMonths
@@ -87,16 +89,17 @@ def add_sevadar(sevadar_details_dict):
         #     print(row)
         # print(cur.fetchall())
     except Exception as e:
-        print("Database error:",e)
+        print("Database error:", e)
         print(traceback.format_exc())
     finally:
         conn.close()
 
 
 class Ui_MainWindow(QWidget):
-    def __init__(self,window):
+    def __init__(self, window):
         super().__init__()
         self.setupUi(window)
+
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -107,11 +110,12 @@ class Ui_MainWindow(QWidget):
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
         self.buttonBox.setGeometry(QRect(390, 610, 193, 28))
-        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
         self.gridLayoutWidget = QWidget(self.centralwidget)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
         self.gridLayoutWidget.setGeometry(QRect(80, 80, 814, 531))
-        
+
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SetMinimumSize)
@@ -123,10 +127,12 @@ class Ui_MainWindow(QWidget):
         self.gridLayout.addWidget(self.label_date, 7, 0, 1, 1)
 
         self.horizontalLayout_seva_start = QHBoxLayout()
-        self.horizontalLayout_seva_start.setObjectName(u"horizontalLayout_seva_start")
+        self.horizontalLayout_seva_start.setObjectName(
+            u"horizontalLayout_seva_start")
         self.label_start_month = QLabel(self.gridLayoutWidget)
         self.label_start_month.setObjectName(u"label_start_month")
-        self.label_start_month.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_start_month.setAlignment(
+            Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_seva_start.addWidget(self.label_start_month)
 
@@ -138,7 +144,8 @@ class Ui_MainWindow(QWidget):
         self.label_star_year = QLabel(self.gridLayoutWidget)
         self.label_star_year.setObjectName(u"label_star_year")
         self.label_star_year.setLayoutDirection(Qt.LeftToRight)
-        self.label_star_year.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_star_year.setAlignment(
+            Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_seva_start.addWidget(self.label_star_year)
 
@@ -162,18 +169,24 @@ class Ui_MainWindow(QWidget):
         self.gridLayout.addWidget(self.label_nakshatra, 3, 0, 1, 1)
 
         self.horizontalLayout__date_basis = QHBoxLayout()
-        self.horizontalLayout__date_basis.setObjectName(u"horizontalLayout__date_basis")
-        self.horizontalLayout__date_basis.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.horizontalLayout__date_basis.setObjectName(
+            u"horizontalLayout__date_basis")
+        self.horizontalLayout__date_basis.setSizeConstraint(
+            QLayout.SetDefaultConstraint)
 
         self.radioButton_date_basis = []
         self.radioButtonGroup_date_basis = QtWidgets.QButtonGroup(MainWindow)
         for i in range(4):
-            self.radioButton_date_basis.append(QRadioButton(self.gridLayoutWidget))
-            self.radioButton_date_basis[i].setObjectName("radioButton_date_basis_"+str(i))
-            
-            self.horizontalLayout__date_basis.addWidget(self.radioButton_date_basis[i])
+            self.radioButton_date_basis.append(
+                QRadioButton(self.gridLayoutWidget))
+            self.radioButton_date_basis[i].setObjectName(
+                "radioButton_date_basis_"+str(i))
 
-            self.radioButtonGroup_date_basis.addButton(self.radioButton_date_basis[i],i)
+            self.horizontalLayout__date_basis.addWidget(
+                self.radioButton_date_basis[i])
+
+            self.radioButtonGroup_date_basis.addButton(
+                self.radioButton_date_basis[i], i)
 
         self.radioButton_date_basis[0].setChecked(True)
 
@@ -181,9 +194,6 @@ class Ui_MainWindow(QWidget):
         self.checkBox_flexible.setObjectName(u"checkBox_flexible")
 
         self.horizontalLayout__date_basis.addWidget(self.checkBox_flexible)
-        
-
-
 
         # self.radioButton_date = QRadioButton(self.gridLayoutWidget)
         # self.radioButton_date.setObjectName(u"radioButton_date")
@@ -210,8 +220,8 @@ class Ui_MainWindow(QWidget):
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_flexible)
 
-
-        self.gridLayout.addLayout(self.horizontalLayout__date_basis, 6, 2, 1, 1)
+        self.gridLayout.addLayout(
+            self.horizontalLayout__date_basis, 6, 2, 1, 1)
 
         self.label_name = QLabel(self.gridLayoutWidget)
         self.label_name.setObjectName(u"label_name")
@@ -256,7 +266,8 @@ class Ui_MainWindow(QWidget):
         self.verticalLayout_address.addWidget(self.comboBox_address)
 
         self.verticalLayout_address_lines = QVBoxLayout()
-        self.verticalLayout_address_lines.setObjectName(u"verticalLayout_address_lines")
+        self.verticalLayout_address_lines.setObjectName(
+            u"verticalLayout_address_lines")
 
         self.lineEdit_address = []
         for i in range(4):
@@ -265,8 +276,8 @@ class Ui_MainWindow(QWidget):
             self.lineEdit_address[i].setObjectName("lineEdit_address"+str(i))
             self.lineEdit_address[i].setEnabled(True)
 
-            self.verticalLayout_address_lines.addWidget(self.lineEdit_address[i])
-        
+            self.verticalLayout_address_lines.addWidget(
+                self.lineEdit_address[i])
 
         # self.lineEdit_address1 = QLineEdit(self.gridLayoutWidget)
         # self.lineEdit_address1.setObjectName(u"lineEdit_address1")
@@ -292,15 +303,14 @@ class Ui_MainWindow(QWidget):
 
         # self.verticalLayout_address_lines.addWidget(self.lineEdit_address4)
 
-
-        self.verticalLayout_address.addLayout(self.verticalLayout_address_lines)
-
+        self.verticalLayout_address.addLayout(
+            self.verticalLayout_address_lines)
 
         self.gridLayout.addLayout(self.verticalLayout_address, 10, 2, 1, 1)
-        
 
         self.horizontalLayout_group_yes_no = QHBoxLayout()
-        self.horizontalLayout_group_yes_no.setObjectName(u"horizontalLayout_group_yes_no")
+        self.horizontalLayout_group_yes_no.setObjectName(
+            u"horizontalLayout_group_yes_no")
 
         self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
 
@@ -310,7 +320,8 @@ class Ui_MainWindow(QWidget):
         self.radioButton_group_yes.setChecked(True)
 
         self.radioButtonGroup_new_address.addButton(self.radioButton_group_yes)
-        self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_yes)
+        self.horizontalLayout_group_yes_no.addWidget(
+            self.radioButton_group_yes)
 
         self.radioButton_group_no = QRadioButton(self.gridLayoutWidget)
         self.radioButton_group_no.setObjectName(u"radioButton_group_no")
@@ -318,29 +329,37 @@ class Ui_MainWindow(QWidget):
         self.radioButtonGroup_new_address.addButton(self.radioButton_group_no)
         self.horizontalLayout_group_yes_no.addWidget(self.radioButton_group_no)
 
-        self.gridLayout.addLayout(self.horizontalLayout_group_yes_no, 9, 2, 1, 1)
+        self.gridLayout.addLayout(
+            self.horizontalLayout_group_yes_no, 9, 2, 1, 1)
 
         self.horizontalLayout_new_address = QHBoxLayout()
-        self.horizontalLayout_new_address.setObjectName(u"horizontalLayout_new_address")
+        self.horizontalLayout_new_address.setObjectName(
+            u"horizontalLayout_new_address")
 
         self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
 
         self.radioButton_new_address = QRadioButton(self.gridLayoutWidget)
         self.radioButton_new_address.setObjectName(u"radioButton_new_address")
-        self.radioButton_new_address.setContextMenuPolicy(Qt.DefaultContextMenu)
+        self.radioButton_new_address.setContextMenuPolicy(
+            Qt.DefaultContextMenu)
         self.radioButton_new_address.setChecked(True)
 
-        self.radioButtonGroup_new_address.addButton(self.radioButton_new_address)
-        self.horizontalLayout_new_address.addWidget(self.radioButton_new_address)
+        self.radioButtonGroup_new_address.addButton(
+            self.radioButton_new_address)
+        self.horizontalLayout_new_address.addWidget(
+            self.radioButton_new_address)
 
         self.radioButton_existing_address = QRadioButton(self.gridLayoutWidget)
-        self.radioButton_existing_address.setObjectName(u"radioButton_existing_address")
+        self.radioButton_existing_address.setObjectName(
+            u"radioButton_existing_address")
 
-        self.radioButtonGroup_new_address.addButton(self.radioButton_existing_address)
-        self.horizontalLayout_new_address.addWidget(self.radioButton_existing_address)
+        self.radioButtonGroup_new_address.addButton(
+            self.radioButton_existing_address)
+        self.horizontalLayout_new_address.addWidget(
+            self.radioButton_existing_address)
 
-        self.gridLayout.addLayout(self.horizontalLayout_new_address, 8, 2, 1, 1)
-
+        self.gridLayout.addLayout(
+            self.horizontalLayout_new_address, 8, 2, 1, 1)
 
         self.label_seva_start = QLabel(self.gridLayoutWidget)
         self.label_seva_start.setObjectName(u"label_seva_start")
@@ -349,8 +368,10 @@ class Ui_MainWindow(QWidget):
 
         self.verticalLayout_date_preference = QVBoxLayout()
         self.verticalLayout_date_preference.setSpacing(0)
-        self.verticalLayout_date_preference.setObjectName(u"verticalLayout_date_preference")
-        self.verticalLayout_date_preference.setSizeConstraint(QLayout.SetMinimumSize)
+        self.verticalLayout_date_preference.setObjectName(
+            u"verticalLayout_date_preference")
+        self.verticalLayout_date_preference.setSizeConstraint(
+            QLayout.SetMinimumSize)
         self.verticalLayout_date_preference.setContentsMargins(0, -1, -1, -1)
 
         # self.verticalLayout_date_preference = QVBoxLayout()
@@ -360,19 +381,21 @@ class Ui_MainWindow(QWidget):
         self.spinBox_date.setMinimum(1)
         self.spinBox_date.setMaximum(31)
 
-
         self.verticalLayout_date_preference.addWidget(self.spinBox_date)
 
         self.comboBox_nakshatra_2 = QComboBox(self.gridLayoutWidget)
         self.comboBox_nakshatra_2.setObjectName(u"comboBox_nakshatra_2")
 
-        self.verticalLayout_date_preference.addWidget(self.comboBox_nakshatra_2)
+        self.verticalLayout_date_preference.addWidget(
+            self.comboBox_nakshatra_2)
 
         self.horizontalLayout_day_week_no = QHBoxLayout()
-        self.horizontalLayout_day_week_no.setObjectName(u"horizontalLayout_day_week_no")
+        self.horizontalLayout_day_week_no.setObjectName(
+            u"horizontalLayout_day_week_no")
         self.label_day = QLabel(self.gridLayoutWidget)
         self.label_day.setObjectName(u"label_day")
-        self.label_day.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_day.setAlignment(
+            Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_day_week_no.addWidget(self.label_day)
 
@@ -384,7 +407,8 @@ class Ui_MainWindow(QWidget):
         self.label_week = QLabel(self.gridLayoutWidget)
         self.label_week.setObjectName(u"label_week")
         self.label_week.setLayoutDirection(Qt.LeftToRight)
-        self.label_week.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_week.setAlignment(
+            Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_day_week_no.addWidget(self.label_week)
 
@@ -400,21 +424,21 @@ class Ui_MainWindow(QWidget):
         self.horizontalLayout_day_week_no.setStretch(1, 1)
         self.horizontalLayout_day_week_no.setStretch(3, 1)
 
-        self.verticalLayout_date_preference.addLayout(self.horizontalLayout_day_week_no)
+        self.verticalLayout_date_preference.addLayout(
+            self.horizontalLayout_day_week_no)
 
         self.comboBox_tithi = QComboBox(self.gridLayoutWidget)
         self.comboBox_tithi.setObjectName(u"comboBox_tithi")
 
         self.verticalLayout_date_preference.addWidget(self.comboBox_tithi)
 
-
-        self.gridLayout.addLayout(self.verticalLayout_date_preference, 7, 2, 1, 1)
+        self.gridLayout.addLayout(
+            self.verticalLayout_date_preference, 7, 2, 1, 1)
 
         self.comboBox_nakshatra = QComboBox(self.gridLayoutWidget)
         self.comboBox_nakshatra.setObjectName(u"comboBox_nakshatra")
 
         self.gridLayout.addWidget(self.comboBox_nakshatra, 3, 2, 1, 1)
-
 
         self.label_rashi = QLabel(self.gridLayoutWidget)
         self.label_rashi.setObjectName(u"label_rashi")
@@ -449,73 +473,99 @@ class Ui_MainWindow(QWidget):
         self.add_options()
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_date.setText(QCoreApplication.translate("MainWindow", u"Seva date preference", None))
-        self.label_start_month.setText(QCoreApplication.translate("MainWindow", u"Month", None))
-        self.label_star_year.setText(QCoreApplication.translate("MainWindow", u"Year", None))
-        self.label_nakshatra.setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
-        self.radioButton_date_basis[0].setText(QCoreApplication.translate("MainWindow", u"Date", None))
-        self.radioButton_date_basis[1].setText(QCoreApplication.translate("MainWindow", u"Nakshatra", None))
-        self.radioButton_date_basis[2].setText(QCoreApplication.translate("MainWindow", u"Week number and day", None))
-        self.radioButton_date_basis[3].setText(QCoreApplication.translate("MainWindow", u"Tithi", None))
-        self.checkBox_flexible.setText(QCoreApplication.translate("MainWindow", u"Flexible", None))
-        self.label_name.setText(QCoreApplication.translate("MainWindow", u"Name", None))
-        self.label_group.setText(QCoreApplication.translate("MainWindow", u"Does this sevadar belong to a group?", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate(
+            "MainWindow", u"MainWindow", None))
+        self.label_date.setText(QCoreApplication.translate(
+            "MainWindow", u"Seva date preference", None))
+        self.label_start_month.setText(
+            QCoreApplication.translate("MainWindow", u"Month", None))
+        self.label_star_year.setText(
+            QCoreApplication.translate("MainWindow", u"Year", None))
+        self.label_nakshatra.setText(
+            QCoreApplication.translate("MainWindow", u"Nakshatra", None))
+        self.radioButton_date_basis[0].setText(
+            QCoreApplication.translate("MainWindow", u"Date", None))
+        self.radioButton_date_basis[1].setText(
+            QCoreApplication.translate("MainWindow", u"Nakshatra", None))
+        self.radioButton_date_basis[2].setText(
+            QCoreApplication.translate("MainWindow", u"Week number and day", None))
+        self.radioButton_date_basis[3].setText(
+            QCoreApplication.translate("MainWindow", u"Tithi", None))
+        self.checkBox_flexible.setText(
+            QCoreApplication.translate("MainWindow", u"Flexible", None))
+        self.label_name.setText(
+            QCoreApplication.translate("MainWindow", u"Name", None))
+        self.label_group.setText(QCoreApplication.translate(
+            "MainWindow", u"Does this sevadar belong to a group?", None))
 
-        self.label_existing_address.setText(QCoreApplication.translate("MainWindow", u"New address or Existing address?", None))
+        self.label_existing_address.setText(QCoreApplication.translate(
+            "MainWindow", u"New address or Existing address?", None))
 
-        self.label_basis.setText(QCoreApplication.translate("MainWindow", u"Seva date basis", None))
-        self.label_address.setText(QCoreApplication.translate("MainWindow", u"Address", None))
-        self.radioButton_group_yes.setText(QCoreApplication.translate("MainWindow", u"Yes", None))
-        self.radioButton_group_no.setText(QCoreApplication.translate("MainWindow", u"No", None))
+        self.label_basis.setText(QCoreApplication.translate(
+            "MainWindow", u"Seva date basis", None))
+        self.label_address.setText(
+            QCoreApplication.translate("MainWindow", u"Address", None))
+        self.radioButton_group_yes.setText(
+            QCoreApplication.translate("MainWindow", u"Yes", None))
+        self.radioButton_group_no.setText(
+            QCoreApplication.translate("MainWindow", u"No", None))
 
-        self.radioButton_new_address.setText(QCoreApplication.translate("MainWindow", u"New address", None))
-        self.radioButton_existing_address.setText(QCoreApplication.translate("MainWindow", u"Existing address", None))
+        self.radioButton_new_address.setText(
+            QCoreApplication.translate("MainWindow", u"New address", None))
+        self.radioButton_existing_address.setText(
+            QCoreApplication.translate("MainWindow", u"Existing address", None))
 
-        self.label_seva_start.setText(QCoreApplication.translate("MainWindow", u"Seva start", None))
-        self.label_day.setText(QCoreApplication.translate("MainWindow", u"Day", None))
-        self.label_week.setText(QCoreApplication.translate("MainWindow", u"Week number", None))
-        self.label_rashi.setText(QCoreApplication.translate("MainWindow", u"Rashi", None))
-        self.label_gotra.setText(QCoreApplication.translate("MainWindow", u"Gotra", None))
+        self.label_seva_start.setText(
+            QCoreApplication.translate("MainWindow", u"Seva start", None))
+        self.label_day.setText(
+            QCoreApplication.translate("MainWindow", u"Day", None))
+        self.label_week.setText(QCoreApplication.translate(
+            "MainWindow", u"Week number", None))
+        self.label_rashi.setText(
+            QCoreApplication.translate("MainWindow", u"Rashi", None))
+        self.label_gotra.setText(
+            QCoreApplication.translate("MainWindow", u"Gotra", None))
     # retranslateUi
 
     def connectUi(self):
         for i in self.radioButtonGroup_date_basis.buttons():
-            i.clicked.connect(lambda: self.date_basis_radio_callback(self.radioButtonGroup_date_basis.checkedId()))
-        self.date_basis_radio_callback(self.radioButtonGroup_date_basis.checkedId())
+            i.clicked.connect(lambda: self.date_basis_radio_callback(
+                self.radioButtonGroup_date_basis.checkedId()))
+        self.date_basis_radio_callback(
+            self.radioButtonGroup_date_basis.checkedId())
 
         # self.radioButton_group_yes.clicked.connect(lambda: self.group_yes_or_no_callback(False))
         # self.radioButton_group_no.clicked.connect(lambda: self.group_yes_or_no_callback(True))
         # self.group_yes_or_no_callback(False)
 
-        
-        self.radioButton_new_address.clicked.connect(lambda: self.new_address_callback(True))
-        self.radioButton_existing_address.clicked.connect(lambda: self.new_address_callback(False))
+        self.radioButton_new_address.clicked.connect(
+            lambda: self.new_address_callback(True))
+        self.radioButton_existing_address.clicked.connect(
+            lambda: self.new_address_callback(False))
         self.new_address_callback(True)
 
         self.buttonBox.accepted.connect(lambda: add_sevadar({
-            "name":self.lineEdit_name.text(),
+            "name": self.lineEdit_name.text(),
             "rashi": self.comboBox_rashi.currentIndex()+1,
             "nakshatra": self.comboBox_nakshatra.currentIndex()+1,
             "gotra": self.comboBox_gotra.currentIndex()+1,
-            "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d"),
-            "date_basis":self.radioButtonGroup_date_basis.checkedId(),
-            "date":(self.spinBox_date.value(),
-                    self.comboBox_nakshatra_2.currentIndex()+1,
-                    self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
-                    self.comboBox_tithi.currentIndex()+1),
-            "flexible_flag":self.checkBox_flexible.isChecked(),
-            "new_address_flag":self.radioButton_new_address.isChecked(),
-            "group_flag":self.radioButton_group_yes.isChecked(),
-            "address_id":int(self.comboBox_address.currentText()[0]) if  self.comboBox_address.currentText() != "" else -1 ,
-            "address":[i.text() for i in self.lineEdit_address]
-            }))
+            "start_month": self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1, "02d"),
+            "date_basis": self.radioButtonGroup_date_basis.checkedId(),
+            "date": (self.spinBox_date.value(),
+                     self.comboBox_nakshatra_2.currentIndex()+1,
+                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
+                     self.comboBox_tithi.currentIndex()+1),
+            "flexible_flag": self.checkBox_flexible.isChecked(),
+            "new_address_flag": self.radioButton_new_address.isChecked(),
+            "group_flag": self.radioButton_group_yes.isChecked(),
+            "address_id": int(self.comboBox_address.currentText()[0]) if self.comboBox_address.currentText() != "" else -1,
+            "address": [i.text() for i in self.lineEdit_address]
+        }))
 
         self.buttonBox.rejected.connect(lambda: self.MainWindow.close())
 
-
-    def date_basis_radio_callback(self,index):
-        setHidden_values= [True]*4
+    def date_basis_radio_callback(self, index):
+        setHidden_values = [True]*4
         setHidden_values[index] = False
 
         self.spinBox_date.setHidden(setHidden_values[0])
@@ -534,14 +584,7 @@ class Ui_MainWindow(QWidget):
 
         for i in self.lineEdit_address:
             i.setHidden(not state)
-        
-    # def group_yes_or_no_callback(self,state):
-    #     self.comboBox_address.setHidden(state)
 
-    #     for i in self.lineEdit_address:
-    #         i.setHidden(not state)
-
-    
     def add_options(self):
         self.comboBox_rashi.addItems(SanskritNames.rashis.values())
         self.comboBox_nakshatra.addItems(SanskritNames.nakshatras.values())
@@ -554,7 +597,7 @@ class Ui_MainWindow(QWidget):
         try:
             conn = sqlite3.connect('data\Seva_manager.db')
             cur = conn.cursor()
-            addresses=cur.execute('SELECT * FROM Addresses').fetchall()
+            addresses = cur.execute('SELECT * FROM Addresses').fetchall()
         except Exception as e:
             print(e)
         finally:
@@ -562,7 +605,7 @@ class Ui_MainWindow(QWidget):
         # print(addresses)
         for address in addresses:
             self.comboBox_address.addItem(str(address)[1:-1])
-    
+
 
 if __name__ == "__main__":
     import sys
