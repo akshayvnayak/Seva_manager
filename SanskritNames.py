@@ -1,13 +1,11 @@
 import json
-with open("thirdparty/panchanga/sanskrit_names.json", encoding='utf8') as fp:
+with open("data/panchanga.json", encoding='utf8') as fp:
     sktnames = json.load(fp)
 tithis = sktnames["tithis"]
 nakshatras = sktnames["nakshatras"]
-vaaras = sktnames["varas"]
-yogas = sktnames["yogas"]
-karanas = sktnames["karanas"]
-masas = sktnames["masas"]
-samvats = sktnames["samvats"]
+vaaras = sktnames["vaaras"]
+masas = sktnames["maasas"]
+samvatsaras = sktnames["samvatsaras"]
 ritus = sktnames["ritus"]
 rashis = sktnames["rashis"]
 gotras = sktnames["gotras"]

@@ -1,7 +1,9 @@
-
+#!/usr/bin/env python
+# -*- coding: utf8 -*-
 from fpdf import FPDF
+from SanskritNames import samvatsaras
 
-pdf = FPDF('P','mm',(210,99))
+pdf = FPDF('L','mm',(99,210))
 # compression is not yet supported in py3k version
 pdf.compress = False
 # Unicode is not yet supported in the py3k version; use windows-1252 standard font
@@ -39,3 +41,22 @@ for i in range(2):
     pdf.text(159,87.6,gotra)
 
 pdf.output('out.pdf', 'F')
+
+
+pdf_ = FPDF('L','mm',(109.5502 , 219.075))
+pdf_.set_font('Arial', '', 12)
+
+l1 = 'Aksdfsadjflkj'
+l2 = 'Aksdfsadjflkj'
+l3 = 'Aksdfsadjflkj'
+l4 = 'Aksdfsadjflkj'
+pdf_.add_page()
+pdf_.image('template_preperation/envelope_with_address.jpg',0,0,219.075,109.5502)
+pdf_.text(110,48,l1)
+pdf_.text(110,56.15,l1)
+pdf_.text(110,64.3,l1)
+pdf_.text(110,72.45,l1)
+pdf_.add_page()
+pdf_.image('template_preperation/envelope_without_address.jpg',0,0,219.075,109.5502)
+
+pdf_.output('env.pdf')

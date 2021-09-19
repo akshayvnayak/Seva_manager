@@ -106,7 +106,7 @@ try:
     cur.execute(
         '''
             CREATE TABLE IF NOT EXISTS PoojaCount(
-                yyyymm  TEXT,
+                yyyymm  TEXT PRIMARY KEY,
                 count INTEGER
             );
         '''

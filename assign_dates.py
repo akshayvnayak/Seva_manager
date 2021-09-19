@@ -24,7 +24,7 @@ def calc_panchanga(year,month):
     a['ritu'] = a.apply(lambda row: pan.ritu(row.masa[0]),axis = 1)
     a['ayana'] = a.apply(lambda row: str(month)+str(row.jd) < '0714' and str(month)+str(row.jd) > '0114',axis=1)
     a['samvatsara'] = a.apply(lambda row: pan.samvatsara(row.jd,row.masa[0]),axis = 1)
-    print(a)
+    # print(a)
     return a
 
 def assign_dates(database,year,month):
@@ -37,15 +37,22 @@ def assign_dates(database,year,month):
         con = sqlite3.connect(database)
         con.row_factory = dict_factory
         cur = con.cursor()
+        # cur.execute(f"""
+        #     SELECT sevadar_id,pooja_basis, pooja_date,flexible
+        #         FROM SevadarDetails
+        #             NATURAL JOIN
+        #             SevaStartMonths
+        #         GROUP BY SevaStartMonths.sevadar_id
+        #     HAVING MAX(SevaStartMonths.start_yyyymm) > '{year-1}-{month}';
+        # """)
+        # print(f"'{year-1}-{format(month,'02d')}'")
         cur.execute(f"""
             SELECT sevadar_id,pooja_basis, pooja_date,flexible
-                FROM SevadarDetails
-                    NATURAL JOIN
-                    SevaStartMonths
-                GROUP BY SevaStartMonths.sevadar_id
-            HAVING MAX(SevaStartMonths.start_yyyymm) > '{year-1}-{month}';
+                FROM SevadarDetailsRecent
+            where (start_yyyymm > '{year-1}-{format(month,'02d')}' AND start_yyyymm <= '{year}-{format(month,'02d')}');
         """)
         x = cur.fetchall()
+        # print(x)
         flexible = []
 
 
@@ -79,7 +86,7 @@ def assign_dates(database,year,month):
                     d = month_panchanga[month_panchanga['tithi'] == calc_decrement(date,30)].date.head(1)
             assigned_sevadars[int(d)].append(sevadar_id)
         
-        print(flexible)
+        # print(flexible)
 
 
         ##################################################################################################################################
@@ -113,7 +120,7 @@ def assign_dates(database,year,month):
                 flexible_.remove(i)
         flexible = flexible_
 
-        print(flexible)
+        # print(flexible)
 
 
         ##################################################################################################################################
@@ -130,7 +137,7 @@ def assign_dates(database,year,month):
             if date_iter > total_days:
                 date_iter = 1
         flexible = flexible_
-        print(flexible)
+        # print(flexible)
 
 
         ##################################################################################################################################
@@ -147,4 +154,5 @@ def assign_dates(database,year,month):
     finally:
         con.close()
 
-assign_dates('data/Seva_manager.db',2019,4)
+if __name__ == '__main__':
+    assign_dates('data/Seva_manager.db',2021,1)
