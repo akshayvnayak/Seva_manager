@@ -52,6 +52,7 @@ def assign_dates(database,year,month):
             where (start_yyyymm > '{year-1}-{format(month,'02d')}' AND start_yyyymm <= '{year}-{format(month,'02d')}');
         """)
         x = cur.fetchall()
+
         # print(x)
         flexible = []
 
@@ -147,7 +148,7 @@ def assign_dates(database,year,month):
         for i in flexible:
             assigned_sevadars[randint(1,total_days)].append(i['sevadar_id'])
 
-        print(assigned_sevadars)
+        # print(assigned_sevadars)
         return assigned_sevadars
     except Exception as e:
         print(traceback.format_exc())
