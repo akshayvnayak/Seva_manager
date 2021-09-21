@@ -78,8 +78,9 @@ def create_pdf(year,month):
         conn.close()
 
 
-
-    ################### Create a pdf #################################
+    ####################################################################################################
+    ########################################### Create a pdf ###########################################
+    ####################################################################################################
 
     pdf = FPDF('L','mm',(99,210))
     env_pdf = FPDF('L','mm',(109.5502 , 219.075))
@@ -119,10 +120,12 @@ def create_pdf(year,month):
             # print(l1)
             env_pdf.add_page()
             env_pdf.image('template_preperation/envelope_without_address.jpg',0,0,219.075,109.5502)
+            env_pdf.text(20,48,pno)
             env_pdf.text(110,48,i['line1'])
             env_pdf.text(110,56.15,i['line2'])
             env_pdf.text(110,64.3,i['line3'])
             env_pdf.text(110,72.45,i['line4'])
+
 
         pdf.add_page()
         pdf.image("template_preperation/invoice.jpg", 0, 0,210,99)
