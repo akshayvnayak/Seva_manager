@@ -21,8 +21,8 @@ class App(QWidget):
         self.title = 'PyQt5 - QTableWidget'
         self.left = 0
         self.top = 0
-        self.width = 600
-        self.height = 600
+        self.width = 1200
+        self.height = 720
 
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -33,7 +33,7 @@ class App(QWidget):
         self.layout.addWidget(self.tableWidget)
         self.setLayout(self.layout)
 
-        self.show()
+        self.showMaximized()
 
     def createTable(self):
         self.tableWidget = QTableWidget()
@@ -92,11 +92,20 @@ class App(QWidget):
             edit_button.setText('EDIT')
             edit_button.clicked.connect(lambda x, sevadar_id = s['sevadar_id'] : self.edit_button_callback(sevadar_id))
             self.tableWidget.setCellWidget(i,11,edit_button)
+
+            
+            self.tableWidget.setItem(i,12,QTableWidgetItem(type=2))
+            delete_button = QPushButton()
+            delete_button.setText('DELETE')
+            delete_button.clicked.connect(lambda x, sevadar_id = s['sevadar_id'] : self.show_delete_popup(sevadar_id))
+            self.tableWidget.setCellWidget(i,12,delete_button)
+            
         
 
         self.tableWidget.resizeRowsToContents()
         self.tableWidget.resizeColumnsToContents()
 
+        self.tableWidget.verticalHeader().hide()
         #Table will fit the screen horizontally
         # self.tableWidget.horizontalHeader().setStretchLastSection(True)
         # self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -113,6 +122,38 @@ class App(QWidget):
         # print(format_exc())
 
 
+    def show_delete_popup(self,s_id):
+        msg = QMessageBox()
+        msg.setWindowTitle("Warning!")
+        msg.setText("Are you sure want to delete it?")
+        msg.setIcon(QMessageBox.Critical)
+        msg.setStandardButtons(QMessageBox.Cancel|QMessageBox.Ok)
+        msg.setDefaultButton(QMessageBox.Cancel)
+        msg.setInformativeText("This will delete all the data of the sevadar!")
+
+        msg.buttonClicked.connect(lambda x, s = s_id: self.delete_popup_callback(x,s))
+        # msg.buttonClicked.connect(lambda x : print(x.int()))
+
+        x = msg.exec_()
+
+    def delete_popup_callback(self,response,s_id):
+        if response.text() == 'Cancel':
+            return
+        try:
+            conn = sqlite3.connect('data\Seva_manager.db')
+            print("Opened database successfully", __name__)
+            cur = conn.cursor()
+            cur.execute(f"""
+                DELETE FROM Sevadars WHERE sevadar_id = {s_id};
+            """)
+            conn.commit()
+            # print(cur.fetchall())
+            # self.sevadar= cur.fetchone()
+        except Exception as e:
+            print(format_exc())
+        finally:
+            conn.close()
+        print(s_id,"deleted")
 
 def display_sevadars():
         global app

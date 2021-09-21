@@ -13,19 +13,24 @@ class Ui ( Ui_MainWindow):
     
     def setup(self,s_id):
         self.s_id = s_id
+        # sevadar = {}
         try:
             conn = sqlite3.connect('data\Seva_manager.db')
             conn.row_factory = dict_factory
-            print("Opened database successfully")
+            print("Opened database successfully", __name__)
             cur = conn.cursor()
             cur.execute(f"""
-                select * from sevadardetails where sevadar_id = {s_id};
+                select * from sevadardetailsRecent where sevadar_id = {s_id};
             """)
+            self.sevadar= cur.fetchone()
+            # print(sevadar)
+            # x = self.sevadar
+            # print(self.sevadar)
         except Exception as e:
             print(format_exc())
         finally:
             conn.close()
-        self.sevadar= cur.fetchall()[0]
+        # self.sevadar = sevadar
         print(self.sevadar)
         self.set_selected_options()
 
@@ -175,7 +180,7 @@ def edit_sevadar(s_id):
     # app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui(MainWindow,s_id)
-    MainWindow.show()
+    MainWindow.showMaximized()
     # return MainWindow
     # app.exec()
 

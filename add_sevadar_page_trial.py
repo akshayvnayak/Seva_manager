@@ -95,55 +95,67 @@ def add_sevadar(sevadar_details_dict):
         conn.close()
 
 
-class Ui_MainWindow(QWidget):
-    def __init__(self, window):
-        super().__init__()
-        self.setupUi(window)
+class Ui_MainWindow(QScrollArea):
+    def __init__(self):
+        super(Ui_MainWindow, self).__init__()
+        # widget = QWidget()
+        # layout = QVBoxLayout(widget)
+        # layout.setAlignment(Qt.AlignTop)
+        # for index in range(100):
+        #     layout.addWidget(QLabel('Label %02d' % index))
+        # self.setWidget(widget)
+        self.setWidgetResizable(True)
+        # super().__init__()
+    #     self.setupUi(self)
 
-    def setupUi(self, MainWindow):
+    # def setupUi(self, MainWindow):
+        MainWindow = self
+        self.MainWindow = MainWindow
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1080, 720)
-        MainWindow.setTabShape(QTabWidget.Rounded)
-        self.centralwidget = QWidget(MainWindow)
+        # MainWindow.setTabShape(QTabWidget.Rounded)
+        self.centralwidget = QWidget()
         self.centralwidget.setObjectName(u"centralwidget")
+
+        #   = QWidget(self.centralwidget)
+        #  .setObjectName(u"gridLayoutWidget")
+        # #  .setGeometry(QRect(20,10, 814, 531))
+        
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.gridLayoutWidget = QWidget(self.centralwidget)
-        self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(20,10, 814, 531))
-        
-        self.buttonBox.setGeometry(QRect(390, 610, 193, 28))
-        self.buttonBox.setStandardButtons(
-            QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
+        # self.buttonBox.setGeometry(QRect(390, 610, 193, 28))
+        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
 
 
-        self.gridLayout = QGridLayout(self.gridLayoutWidget)
+
+        self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SetMinimumSize)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.label_date = QLabel(self.gridLayoutWidget)
+        self.gridLayout.setContentsMargins(20, 20, 20, 20)
+        self.label_date = QLabel( )
         self.label_date.setObjectName(u"label_date")
         self.gridLayout.setAlignment(Qt.AlignCenter)
 
         self.gridLayout.addWidget(self.label_date, 7, 0, 1, 1)
+        self.gridLayout.addWidget(self.buttonBox,12,2,2,1)
 
         self.horizontalLayout_seva_start = QHBoxLayout()
         self.horizontalLayout_seva_start.setObjectName(
             u"horizontalLayout_seva_start")
-        self.label_start_month = QLabel(self.gridLayoutWidget)
+        self.label_start_month = QLabel( )
         self.label_start_month.setObjectName(u"label_start_month")
         self.label_start_month.setAlignment(
             Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_seva_start.addWidget(self.label_start_month)
 
-        self.comboBox_start_month = QComboBox(self.gridLayoutWidget)
+        self.comboBox_start_month = QComboBox( )
         self.comboBox_start_month.setObjectName(u"comboBox_start_month")
 
         self.horizontalLayout_seva_start.addWidget(self.comboBox_start_month)
 
-        self.label_star_year = QLabel(self.gridLayoutWidget)
+        self.label_star_year = QLabel( )
         self.label_star_year.setObjectName(u"label_star_year")
         self.label_star_year.setLayoutDirection(Qt.LeftToRight)
         self.label_star_year.setAlignment(
@@ -151,7 +163,7 @@ class Ui_MainWindow(QWidget):
 
         self.horizontalLayout_seva_start.addWidget(self.label_star_year)
 
-        self.spinBox_start_year = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_start_year = QSpinBox( )
         self.spinBox_start_year.setObjectName(u"spinBox_start_year")
         self.spinBox_start_year.setCursor(QCursor(Qt.ArrowCursor))
         self.spinBox_start_year.setMinimum(2000)
@@ -165,7 +177,7 @@ class Ui_MainWindow(QWidget):
 
         self.gridLayout.addLayout(self.horizontalLayout_seva_start, 5, 2, 1, 1)
 
-        self.label_nakshatra = QLabel(self.gridLayoutWidget)
+        self.label_nakshatra = QLabel( )
         self.label_nakshatra.setObjectName(u"label_nakshatra")
 
         self.gridLayout.addWidget(self.label_nakshatra, 3, 0, 1, 1)
@@ -180,7 +192,7 @@ class Ui_MainWindow(QWidget):
         self.radioButtonGroup_date_basis = QtWidgets.QButtonGroup(MainWindow)
         for i in range(4):
             self.radioButton_date_basis.append(
-                QRadioButton(self.gridLayoutWidget))
+                QRadioButton( ))
             self.radioButton_date_basis[i].setObjectName(
                 "radioButton_date_basis_"+str(i))
 
@@ -192,32 +204,32 @@ class Ui_MainWindow(QWidget):
 
         self.radioButton_date_basis[0].setChecked(True)
 
-        self.checkBox_flexible = QCheckBox(self.gridLayoutWidget)
+        self.checkBox_flexible = QCheckBox( )
         self.checkBox_flexible.setObjectName(u"checkBox_flexible")
 
         self.horizontalLayout__date_basis.addWidget(self.checkBox_flexible)
 
-        # self.radioButton_date = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_date = QRadioButton( )
         # self.radioButton_date.setObjectName(u"radioButton_date")
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_date)
 
-        # self.radioButton_nakshatra = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_nakshatra = QRadioButton( )
         # self.radioButton_nakshatra.setObjectName(u"radioButton_nakshatra")
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_nakshatra)
 
-        # self.radioButton_week = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_week = QRadioButton( )
         # self.radioButton_week.setObjectName(u"radioButton_week")
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_week)
 
-        # self.radioButton_tithi = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_tithi = QRadioButton( )
         # self.radioButton_tithi.setObjectName(u"radioButton_tithi")
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_tithi)
 
-        # self.radioButton_flexible = QRadioButton(self.gridLayoutWidget)
+        # self.radioButton_flexible = QRadioButton( )
         # self.radioButton_flexible.setObjectName(u"radioButton_flexible")
 
         # self.horizontalLayout__date_basis.addWidget(self.radioButton_flexible)
@@ -225,44 +237,44 @@ class Ui_MainWindow(QWidget):
         self.gridLayout.addLayout(
             self.horizontalLayout__date_basis, 6, 2, 1, 1)
 
-        self.label_name = QLabel(self.gridLayoutWidget)
+        self.label_name = QLabel( )
         self.label_name.setObjectName(u"label_name")
 
         self.gridLayout.addWidget(self.label_name, 0, 0, 1, 1)
 
-        self.label_group = QLabel(self.gridLayoutWidget)
+        self.label_group = QLabel( )
         self.label_group.setObjectName(u"label_group")
 
         self.gridLayout.addWidget(self.label_group, 9, 0, 1, 1)
 
-        self.label_existing_address = QLabel(self.gridLayoutWidget)
+        self.label_existing_address = QLabel( )
         self.label_existing_address.setObjectName(u"label_existing_address")
 
         self.gridLayout.addWidget(self.label_existing_address, 8, 0, 1, 1)
 
-        self.label_basis = QLabel(self.gridLayoutWidget)
+        self.label_basis = QLabel( )
         self.label_basis.setObjectName(u"label_basis")
 
         self.gridLayout.addWidget(self.label_basis, 6, 0, 1, 1)
 
-        self.comboBox_gotra = QComboBox(self.gridLayoutWidget)
+        self.comboBox_gotra = QComboBox( )
         self.comboBox_gotra.setObjectName(u"comboBox_gotra")
 
         self.gridLayout.addWidget(self.comboBox_gotra, 4, 2, 1, 1)
 
-        self.label_address = QLabel(self.gridLayoutWidget)
+        self.label_address = QLabel( )
         self.label_address.setObjectName(u"label_address")
 
         self.gridLayout.addWidget(self.label_address, 10, 0, 1, 1)
 
-        self.lineEdit_name = QLineEdit(self.gridLayoutWidget)
+        self.lineEdit_name = QLineEdit( )
         self.lineEdit_name.setObjectName(u"lineEdit_name")
 
         self.gridLayout.addWidget(self.lineEdit_name, 0, 2, 1, 1)
 
         self.verticalLayout_address = QVBoxLayout()
         self.verticalLayout_address.setObjectName(u"verticalLayout_address")
-        self.comboBox_address = QComboBox(self.gridLayoutWidget)
+        self.comboBox_address = QComboBox( )
         self.comboBox_address.setObjectName(u"comboBox_address")
 
         self.verticalLayout_address.addWidget(self.comboBox_address)
@@ -274,32 +286,32 @@ class Ui_MainWindow(QWidget):
         self.lineEdit_address = []
         for i in range(4):
 
-            self.lineEdit_address.append(QLineEdit(self.gridLayoutWidget))
+            self.lineEdit_address.append(QLineEdit( ))
             self.lineEdit_address[i].setObjectName("lineEdit_address"+str(i))
             self.lineEdit_address[i].setEnabled(True)
 
             self.verticalLayout_address_lines.addWidget(
                 self.lineEdit_address[i])
 
-        # self.lineEdit_address1 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address1 = QLineEdit( )
         # self.lineEdit_address1.setObjectName(u"lineEdit_address1")
         # self.lineEdit_address1.setEnabled(True)
 
         # self.verticalLayout_address_lines.addWidget(self.lineEdit_address1)
 
-        # self.lineEdit_address2 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address2 = QLineEdit( )
         # self.lineEdit_address2.setObjectName(u"lineEdit_address2")
         # self.lineEdit_address2.setEnabled(True)
 
         # self.verticalLayout_address_lines.addWidget(self.lineEdit_address2)
 
-        # self.lineEdit_address3 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address3 = QLineEdit( )
         # self.lineEdit_address3.setObjectName(u"lineEdit_address3")
         # self.lineEdit_address3.setEnabled(True)
 
         # self.verticalLayout_address_lines.addWidget(self.lineEdit_address3)
 
-        # self.lineEdit_address4 = QLineEdit(self.gridLayoutWidget)
+        # self.lineEdit_address4 = QLineEdit( )
         # self.lineEdit_address4.setObjectName(u"lineEdit_address4")
         # self.lineEdit_address4.setEnabled(True)
 
@@ -316,7 +328,7 @@ class Ui_MainWindow(QWidget):
 
         self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
 
-        self.radioButton_group_yes = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_group_yes = QRadioButton( )
         self.radioButton_group_yes.setObjectName(u"radioButton_group_yes")
         self.radioButton_group_yes.setContextMenuPolicy(Qt.DefaultContextMenu)
         self.radioButton_group_yes.setChecked(True)
@@ -325,7 +337,7 @@ class Ui_MainWindow(QWidget):
         self.horizontalLayout_group_yes_no.addWidget(
             self.radioButton_group_yes)
 
-        self.radioButton_group_no = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_group_no = QRadioButton( )
         self.radioButton_group_no.setObjectName(u"radioButton_group_no")
 
         self.radioButtonGroup_new_address.addButton(self.radioButton_group_no)
@@ -340,7 +352,7 @@ class Ui_MainWindow(QWidget):
 
         self.radioButtonGroup_new_address = QtWidgets.QButtonGroup(MainWindow)
 
-        self.radioButton_new_address = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_new_address = QRadioButton( )
         self.radioButton_new_address.setObjectName(u"radioButton_new_address")
         self.radioButton_new_address.setContextMenuPolicy(
             Qt.DefaultContextMenu)
@@ -351,7 +363,7 @@ class Ui_MainWindow(QWidget):
         self.horizontalLayout_new_address.addWidget(
             self.radioButton_new_address)
 
-        self.radioButton_existing_address = QRadioButton(self.gridLayoutWidget)
+        self.radioButton_existing_address = QRadioButton( )
         self.radioButton_existing_address.setObjectName(
             u"radioButton_existing_address")
 
@@ -363,7 +375,7 @@ class Ui_MainWindow(QWidget):
         self.gridLayout.addLayout(
             self.horizontalLayout_new_address, 8, 2, 1, 1)
 
-        self.label_seva_start = QLabel(self.gridLayoutWidget)
+        self.label_seva_start = QLabel( )
         self.label_seva_start.setObjectName(u"label_seva_start")
 
         self.gridLayout.addWidget(self.label_seva_start, 5, 0, 1, 1)
@@ -378,14 +390,14 @@ class Ui_MainWindow(QWidget):
 
         # self.verticalLayout_date_preference = QVBoxLayout()
         # self.verticalLayout_date_preference.setObjectName(u"verticalLayout_date_preference")
-        self.spinBox_date = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_date = QSpinBox( )
         self.spinBox_date.setObjectName(u"spinBox_date")
         self.spinBox_date.setMinimum(1)
         self.spinBox_date.setMaximum(31)
 
         self.verticalLayout_date_preference.addWidget(self.spinBox_date)
 
-        self.comboBox_nakshatra_2 = QComboBox(self.gridLayoutWidget)
+        self.comboBox_nakshatra_2 = QComboBox( )
         self.comboBox_nakshatra_2.setObjectName(u"comboBox_nakshatra_2")
 
         self.verticalLayout_date_preference.addWidget(
@@ -394,19 +406,19 @@ class Ui_MainWindow(QWidget):
         self.horizontalLayout_day_week_no = QHBoxLayout()
         self.horizontalLayout_day_week_no.setObjectName(
             u"horizontalLayout_day_week_no")
-        self.label_day = QLabel(self.gridLayoutWidget)
+        self.label_day = QLabel( )
         self.label_day.setObjectName(u"label_day")
         self.label_day.setAlignment(
             Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
 
         self.horizontalLayout_day_week_no.addWidget(self.label_day)
 
-        self.comboBox_day = QComboBox(self.gridLayoutWidget)
+        self.comboBox_day = QComboBox( )
         self.comboBox_day.setObjectName(u"comboBox_day")
 
         self.horizontalLayout_day_week_no.addWidget(self.comboBox_day)
 
-        self.label_week = QLabel(self.gridLayoutWidget)
+        self.label_week = QLabel( )
         self.label_week.setObjectName(u"label_week")
         self.label_week.setLayoutDirection(Qt.LeftToRight)
         self.label_week.setAlignment(
@@ -414,7 +426,7 @@ class Ui_MainWindow(QWidget):
 
         self.horizontalLayout_day_week_no.addWidget(self.label_week)
 
-        self.spinBox_week_no = QSpinBox(self.gridLayoutWidget)
+        self.spinBox_week_no = QSpinBox( )
         self.spinBox_week_no.setObjectName(u"spinBox_week_no")
         self.spinBox_week_no.setCursor(QCursor(Qt.ArrowCursor))
         self.spinBox_week_no.setMinimum(1)
@@ -429,7 +441,7 @@ class Ui_MainWindow(QWidget):
         self.verticalLayout_date_preference.addLayout(
             self.horizontalLayout_day_week_no)
 
-        self.comboBox_tithi = QComboBox(self.gridLayoutWidget)
+        self.comboBox_tithi = QComboBox( )
         self.comboBox_tithi.setObjectName(u"comboBox_tithi")
 
         self.verticalLayout_date_preference.addWidget(self.comboBox_tithi)
@@ -437,42 +449,44 @@ class Ui_MainWindow(QWidget):
         self.gridLayout.addLayout(
             self.verticalLayout_date_preference, 7, 2, 1, 1)
 
-        self.comboBox_nakshatra = QComboBox(self.gridLayoutWidget)
+        self.comboBox_nakshatra = QComboBox( )
         self.comboBox_nakshatra.setObjectName(u"comboBox_nakshatra")
 
         self.gridLayout.addWidget(self.comboBox_nakshatra, 3, 2, 1, 1)
 
-        self.label_rashi = QLabel(self.gridLayoutWidget)
+        self.label_rashi = QLabel( )
         self.label_rashi.setObjectName(u"label_rashi")
 
         self.gridLayout.addWidget(self.label_rashi, 2, 0, 1, 1)
 
-        self.comboBox_rashi = QComboBox(self.gridLayoutWidget)
+        self.comboBox_rashi = QComboBox( )
         self.comboBox_rashi.setObjectName(u"comboBox_rashi")
 
         self.gridLayout.addWidget(self.comboBox_rashi, 2, 2, 1, 1)
 
-        self.label_gotra = QLabel(self.gridLayoutWidget)
+        self.label_gotra = QLabel( )
         self.label_gotra.setObjectName(u"label_gotra")
 
         self.gridLayout.addWidget(self.label_gotra, 4, 0, 1, 1)
 
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1079, 26))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        # MainWindow.setCentralWidget(self.centralwidget)
+        # self.menubar = QMenuBar(MainWindow)
+        # self.menubar.setObjectName(u"menubar")
+        # self.menubar.setGeometry(QRect(0, 0, 1079, 26))
+        # MainWindow.setMenuBar(self.menubar)
+        # self.statusbar = QStatusBar(MainWindow)
+        # self.statusbar.setObjectName(u"statusbar")
+        # MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
-        self.MainWindow = MainWindow
+        # self.MainWindow = MainWindow
         self.connectUi()
         self.add_options()
+        self.setWidget(self.centralwidget)
+        self.setWidgetResizable(True)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate(
@@ -615,7 +629,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     # x = QtWidgets.QAbstractScrollArea()
-    ui = Ui_MainWindow(MainWindow)
+    ui = Ui_MainWindow()
     # ui.setupUi()
-    MainWindow.showMaximized()
+    # MainWindow.show()
+    ui.showMaximized()
     sys.exit(app.exec_())
