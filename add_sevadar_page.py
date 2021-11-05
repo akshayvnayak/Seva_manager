@@ -20,7 +20,7 @@ def dict_factory(cursor, row):
     return d
 
 
-def add_sevadar(sevadar_details_dict):
+def add_sevadar(sevadar_details_dict,window):
     sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(
         *sevadar_details_dict.values())
     print(sevadar_details)
@@ -29,6 +29,8 @@ def add_sevadar(sevadar_details_dict):
         # conn.row_factory = dict_factory
         print("Opened database successfully")
         cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys=ON")
+        conn.commit()
         cur.execute(f"""
             INSERT INTO Sevadars(name,rashi,nakshatra,gotra,pooja_basis,pooja_date)
             VALUES("{sevadar_details.name}",{sevadar_details.rashi},{sevadar_details.nakshatra},{sevadar_details.gotra},{sevadar_details.date_basis},{sevadar_details.date[sevadar_details.date_basis]});
@@ -93,6 +95,7 @@ def add_sevadar(sevadar_details_dict):
         print(traceback.format_exc())
     finally:
         conn.close()
+    window.close()
 
 
 class Ui_MainWindow(QWidget):
@@ -563,7 +566,7 @@ class Ui_MainWindow(QWidget):
             "group_flag": self.radioButton_group_yes.isChecked(),
             "address_id": int(self.comboBox_address.currentText()[0]) if self.comboBox_address.currentText() != "" else -1,
             "address": [i.text() for i in self.lineEdit_address]
-        }))
+        },self.MainWindow))
 
         self.buttonBox.rejected.connect(lambda: self.MainWindow.close())
 
@@ -600,6 +603,8 @@ class Ui_MainWindow(QWidget):
         try:
             conn = sqlite3.connect('data\Seva_manager.db')
             cur = conn.cursor()
+            cur.execute("PRAGMA foreign_keys=ON")
+            conn.commit()
             addresses = cur.execute('SELECT * FROM Addresses').fetchall()
         except Exception as e:
             print(e)

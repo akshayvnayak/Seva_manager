@@ -45,6 +45,8 @@ class App(QWidget):
             conn.row_factory = dict_factory
             print("Opened database successfully")
             cur = conn.cursor()
+            cur.execute("PRAGMA foreign_keys=ON")
+            conn.commit()
             cur.execute(f"""
                 select * from sevadardetails;
             """)
@@ -81,7 +83,7 @@ class App(QWidget):
             self.tableWidget.setItem(i,6,QTableWidgetItem(pooja_date))
             self.tableWidget.setItem(i,7,QTableWidgetItem(s['start_yyyymm']))
             self.tableWidget.setItem(i,8,QTableWidgetItem('YES' if s['flexible'] else 'NO'))
-            self.tableWidget.setItem(i,9,QTableWidgetItem('YES' if s['group_id'] else 'NO'))
+            self.tableWidget.setItem(i,9,QTableWidgetItem(str(s['group_id'])))
 
             self.tableaddress = QLabel()
             self.tableaddress.setText(s['line1']+'\n'+s['line2']+'\n'+s['line3']+'\n'+s['line4'])
@@ -143,6 +145,8 @@ class App(QWidget):
             conn = sqlite3.connect('data\Seva_manager.db')
             print("Opened database successfully", __name__)
             cur = conn.cursor()
+            cur.execute("PRAGMA foreign_keys=ON")
+            conn.commit()
             cur.execute(f"""
                 DELETE FROM Sevadars WHERE sevadar_id = {s_id};
             """)
@@ -155,11 +159,9 @@ class App(QWidget):
             conn.close()
         print(s_id,"deleted")
 
-def display_sevadars():
+if __name__ == '__main__':
         global app
         app = QApplication(sys.argv)
         global ex
         ex = App()
         sys.exit(app.exec())
-
-display_sevadars()

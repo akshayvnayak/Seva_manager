@@ -19,6 +19,8 @@ class Ui ( Ui_MainWindow):
             conn.row_factory = dict_factory
             print("Opened database successfully", __name__)
             cur = conn.cursor()
+            cur.execute("PRAGMA foreign_keys=ON")
+            conn.commit()
             cur.execute(f"""
                 select * from sevadardetailsRecent where sevadar_id = {s_id};
             """)
@@ -95,6 +97,8 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
         # conn.row_factory = dict_factory
         print("Opened database successfully",__name__)
         cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys=ON")
+        conn.commit()
         cur.execute(f"""
             UPDATE Sevadars
             SET name = "{sevadar_details.name}",

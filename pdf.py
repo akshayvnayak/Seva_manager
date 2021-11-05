@@ -14,8 +14,7 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-def create_pdf(year,month):
-    calendar_dict = assign_dates('data/Seva_manager.db',year,month)
+def create_pdf(year,month,calendar_dict):
     seva_order = []
     total_count = 0
     for i in calendar_dict:
@@ -25,6 +24,8 @@ def create_pdf(year,month):
         conn = sqlite3.connect('data\Seva_manager.db')
         conn.row_factory = dict_factory
         cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys=ON")
+        conn.commit()
         # print("Opened database successfully")
 
         ######## Create a dictionary seva_order, with pno as key and sevadar_details as value
@@ -119,7 +120,7 @@ def create_pdf(year,month):
             # l1 = str(i['pno'])
             # print(l1)
             env_pdf.add_page()
-            env_pdf.image('template_preperation/envelope_without_address.jpg',0,0,219.075,109.5502)
+            env_pdf.image('templates/envelope_without_address.jpg',0,0,219.075,109.5502)
             env_pdf.text(20,48,pno)
             env_pdf.text(110,48,i['line1'])
             env_pdf.text(110,56.15,i['line2'])
@@ -128,7 +129,7 @@ def create_pdf(year,month):
 
 
         pdf.add_page()
-        pdf.image("template_preperation/invoice.jpg", 0, 0,210,99)
+        pdf.image("templates/invoice.jpg", 0, 0,210,99)
 
         pdf.set_font('Arial', 'B', 13.5)
         pdf.text(58,39.5,name)
@@ -138,22 +139,28 @@ def create_pdf(year,month):
         pdf.text(29,28,pno)
         pdf.text(163,28,date)
 
-        pdf.image(f"template_preperation/samvatsaras/{samvatsara}.jpg", 10, 52.3,h = 7)
-        pdf.image(f"template_preperation/ayanas/{ayana}.jpg", 63, 52.15,h = 7)
-        pdf.image(f"template_preperation/ritus/{ritu}.jpg", 99, 52.2,h = 7)
-        pdf.image(f"template_preperation/maasas/{maasa}.jpg", 133.5, 52.3,h = 7)
-        pdf.image(f"template_preperation/pakshas/{paksha}.jpg", 170.5, 52.2,h = 7)
+        pdf.image(f"templates/samvatsaras/{samvatsara}.jpg", 10, 52.3,h = 7)
+        pdf.image(f"templates/ayanas/{ayana}.jpg", 63, 52.15,h = 7)
+        pdf.image(f"templates/ritus/{ritu}.jpg", 99, 52.2,h = 7)
+        pdf.image(f"templates/maasas/{maasa}.jpg", 133.5, 52.3,h = 7)
+        pdf.image(f"templates/pakshas/{paksha}.jpg", 170.5, 52.2,h = 7)
 
-        pdf.image(f"template_preperation/tithis/{tithi}.jpg", 14, 61.27,h = 7)
-        pdf.image(f"template_preperation/vaaras/{vaara}.jpg", 50, 61,h = 7)
+        pdf.image(f"templates/tithis/{tithi}.jpg", 14, 61.27,h = 7)
+        pdf.image(f"templates/vaaras/{vaara}.jpg", 50, 61,h = 7)
 
-        pdf.image(f"template_preperation/rashis/{rashi}.jpg", 26, 83,h = 7)
-        pdf.image(f"template_preperation/nakshatras/{nakshatra}.jpg", 78.5, 83,h = 7)
+        pdf.image(f"templates/rashis/{rashi}.jpg", 26, 83,h = 7)
+        pdf.image(f"templates/nakshatras/{nakshatra}.jpg", 78.5, 83,h = 7)
         pdf.text(159,87.6,gotras[f'{gotra}'])
 
     pdf.output('out.pdf', 'F')
     env_pdf.output('env.pdf','F')
+    print("PDF saved")
+
+    
 
 
 if __name__ == "__main__":
-    create_pdf(2021,1)
+    month = 1
+    year = 2021
+    calendar_dict = assign_dates('data/Seva_manager.db',year,month)
+    create_pdf(year,month,calendar_dict)
