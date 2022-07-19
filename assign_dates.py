@@ -48,7 +48,7 @@ def assign_dates(database,year,month):
         # print(f"'{year-1}-{format(month,'02d')}'")
         cur.execute(f"""
             SELECT sevadar_id,pooja_basis, pooja_date,flexible
-                FROM SevadarDetailsRecent
+                FROM SevadarDetails
             where (start_yyyymm > '{year-1}-{format(month,'02d')}' AND start_yyyymm <= '{year}-{format(month,'02d')}');
         """)
         x = cur.fetchall()

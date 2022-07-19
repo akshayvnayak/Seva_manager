@@ -1,6 +1,7 @@
 from calendar import calendar
 from datetime import datetime
 import sqlite3
+import os
 from traceback import format_exc
 from assign_dates import assign_dates
 
@@ -151,9 +152,13 @@ def create_pdf(year,month,calendar_dict):
         pdf.image(f"templates/rashis/{rashi}.jpg", 26, 83,h = 7)
         pdf.image(f"templates/nakshatras/{nakshatra}.jpg", 78.5, 83,h = 7)
         pdf.text(159,87.6,gotras[f'{gotra}'])
-
-    pdf.output('out.pdf', 'F')
-    env_pdf.output('env.pdf','F')
+    mmyyyy = format(month,'02d')+'_'+str(year)
+    
+    if not os.path.exists('PDFs\\'+mmyyyy):
+        os.makedirs('PDFs\\'+mmyyyy)
+    
+    pdf.output(f"PDFs\{mmyyyy}\invoice_{mmyyyy}.pdf",'F')
+    env_pdf.output(f"PDFs\{mmyyyy}\envelope_{mmyyyy}.pdf",'F')
     print("PDF saved")
 
     

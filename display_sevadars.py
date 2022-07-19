@@ -1,6 +1,4 @@
-import time
 import sys
-from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtWidgets import *
 import sqlite3
 from traceback import format_exc
@@ -48,7 +46,7 @@ class App(QWidget):
             cur.execute("PRAGMA foreign_keys=ON")
             conn.commit()
             cur.execute(f"""
-                select * from sevadardetails;
+                select * from sevadardetailsRecent;
             """)
             sevadars_details = cur.fetchall()
         except Exception as e:
@@ -120,7 +118,7 @@ class App(QWidget):
         # app.quit()
         # import time
         # time.sleep(5)
-        edit_sevadar_page.edit_sevadar(sevadar_id)
+        edit_sevadar_page.edit_sevadar(sevadar_id,self)
         # print(format_exc())
 
 
@@ -158,6 +156,9 @@ class App(QWidget):
         finally:
             conn.close()
         print(s_id,"deleted")
+        self.close()
+        ex = App()
+
 
 if __name__ == '__main__':
         global app

@@ -4,6 +4,7 @@ from traceback import format_exc
 import traceback
 from PyQt5 import QtWidgets
 from add_sevadar_page import Ui_MainWindow,dict_factory
+import display_sevadars
 
 class Ui ( Ui_MainWindow):
     def __init__(self,window,s_id):
@@ -169,22 +170,29 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
                     VALUES({s_id},{address_id});
                 """)
                 cur.execute(f"DELETE FROM Groups WHERE sevadar_id = {s_id}")
-        
-            
+
         conn.commit()
     except Exception as e:
         print("Database error:",e)
         print(traceback.format_exc())
     finally:
         conn.close()
+    ui.close()
+    global ex
+    ex.close()
+    ex = display_sevadars.App()
 
 
-def edit_sevadar(s_id):
+
+def edit_sevadar(s_id,window):
     # import sys
     # app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
+    global ui
     ui = Ui(MainWindow,s_id)
     MainWindow.showMaximized()
+    global ex 
+    ex = window
     # return MainWindow
     # app.exec()
 

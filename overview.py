@@ -41,6 +41,7 @@ class App(QWidget):
     def createTable(self):
 
         mon_cal = monthcalendar(2021,9)
+        print("mon_cal",mon_cal)
         self.tableWidget = QTableWidget()
   
         #Row count
@@ -81,7 +82,7 @@ class App(QWidget):
                         # t.addWidget(scroll)
                         self.tableWidget.setCellWidget(week_no,day,tabledata)        
         except Exception as e:
-            print(e)
+            print("Error occured",e)
         finally:
             con.close()
 
@@ -106,6 +107,6 @@ if __name__ == "__main__":
     global app
     app = QApplication(sys.argv)
     global ex
-    year,month = 2021,1
+    year,month = 2021,9
     ex = App(year,month)
     sys.exit(app.exec())

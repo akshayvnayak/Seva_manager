@@ -11,6 +11,7 @@ from SanskritNames import months
 import add_sevadar_page
 import display_sevadars
 import overview
+import end_dates
 from cloud import drive_upload
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -25,6 +26,7 @@ class Ui_MainWindow(object):
         self.add_options(MainWindow)
         self.connectUi(MainWindow)
         self.MainWindow = MainWindow
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
@@ -45,7 +47,7 @@ class Ui_MainWindow(object):
         self.display_button.setObjectName("display_button")
         self.verticalLayout.addWidget(self.display_button)
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(210, 260, 381, 91))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(270, 250, 251, 96))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.horizontalLayoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -77,6 +79,9 @@ class Ui_MainWindow(object):
         self.download_button = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         self.download_button.setObjectName("download_button")
         self.verticalLayout_2.addWidget(self.download_button)
+        self.view_end_button = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.view_end_button.setObjectName("view_end_button")
+        self.verticalLayout_2.addWidget(self.view_end_button)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(270, 30, 251, 71))
         font = QtGui.QFont()
@@ -85,7 +90,7 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.cloud_backup_button = QtWidgets.QPushButton(self.centralwidget)
-        self.cloud_backup_button.setGeometry(QtCore.QRect(290, 370, 221, 41))
+        self.cloud_backup_button.setGeometry(QtCore.QRect(310, 390, 181, 31))
         self.cloud_backup_button.setObjectName("cloud_backup_button")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -103,15 +108,14 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.add_sevadar_button.setText(_translate("MainWindow", "Add sevadar"))
-        self.display_button.setText(_translate("MainWindow", "Display/Edit details"))
+        self.display_button.setText(_translate("MainWindow", "View/Edit details"))
         self.month_label.setText(_translate("MainWindow", "Month"))
         self.year_label.setText(_translate("MainWindow", "Year"))
         self.download_button.setText(_translate("MainWindow", "Download pdf"))
+        self.view_end_button.setText(_translate("MainWindow", "View End months"))
         self.label.setText(_translate("MainWindow", "Seva Manager"))
         self.cloud_backup_button.setText(_translate("MainWindow", "Cloud backup (Google drive)"))
 
-
-    
     def add_options(self,MainWindow):
         self.month_comboBox.addItems(months.values())
     
@@ -120,6 +124,9 @@ class Ui_MainWindow(object):
         self.display_button.clicked.connect(self.display_callback)
         self.download_button.clicked.connect(self.overview_callback)
         self.cloud_backup_button.clicked.connect(drive_upload)
+        self.view_end_button.clicked.connect(self.view_end_callback)
+
+
 
     def add_callback(self):
         print("add")
@@ -137,6 +144,11 @@ class Ui_MainWindow(object):
         month = self.month_comboBox.currentIndex()+1
         ui = overview.App(year,month)
 
+    def view_end_callback(self):
+        print("view end")
+        year = self.year_spinBox.value()
+        month = self.month_comboBox.currentIndex()+1
+        ui = end_dates.App(year,month)
         
 
 if __name__ == "__main__":
