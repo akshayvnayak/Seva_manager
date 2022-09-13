@@ -40,7 +40,7 @@ class App(QWidget):
     #Create table
     def createTable(self):
 
-        mon_cal = monthcalendar(2021,9)
+        mon_cal = monthcalendar(self.year,self.month)
         print("mon_cal",mon_cal)
         self.tableWidget = QTableWidget()
   
@@ -107,6 +107,6 @@ if __name__ == "__main__":
     global app
     app = QApplication(sys.argv)
     global ex
-    year,month = 2021,9
+    year,month = 2022,9
     ex = App(year,month)
     sys.exit(app.exec())
