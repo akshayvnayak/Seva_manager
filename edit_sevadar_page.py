@@ -1,5 +1,6 @@
 from collections import namedtuple
 import sqlite3
+from tokenize import group
 from traceback import format_exc
 import traceback
 from PyQt5 import QtWidgets
@@ -84,14 +85,20 @@ class Ui ( Ui_MainWindow):
             "flexible_flag":self.checkBox_flexible.isChecked(),
             "new_address_flag":self.radioButton_new_address.isChecked(),
             "group_flag":self.radioButton_group_yes.isChecked(),
-            "address_id":int(self.comboBox_address.currentText()[0]) if  self.comboBox_address.currentText() != "" else -1 ,
+            "address_id":int(self.comboBox_address.currentText().split(',')[0]) if  self.comboBox_address.currentText() != "" else -1 ,
             "address":[i.text() for i in self.lineEdit_address]
         }))
 
 
 
 def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
+    global MainWindow
+    MainWindow.close()
+    global ex
+    ex.close()
+    # ex = display_sevadars.App()
     sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(*sevadar_details_dict.values())
+    print('previous', prev_sevadar)
     print(sevadar_details)
     try:
         conn = sqlite3.connect('data\Seva_manager.db')
@@ -142,9 +149,11 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
             cur.execute('SELECT last_insert_rowid()')
             address_id = cur.fetchone()[0]
         
-        if sevadar_details.group_flag != prev_sevadar['group_id'] != None:
+        if sevadar_details.group_flag != (prev_sevadar['group_id']!=None):# or sevadar_details.group_flag != None:
             if sevadar_details.group_flag:
                 conn.commit()
+                cur.execute(f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
+                conn.commit()                
                 cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
                 existing_group = cur.fetchone()
                 if existing_group == None:
@@ -171,6 +180,40 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
                 """)
                 cur.execute(f"DELETE FROM Groups WHERE sevadar_id = {s_id}")
 
+        else:
+            if sevadar_details.group_flag:
+                conn.commit()
+                cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
+                existing_group = cur.fetchone()
+                if existing_group == None:
+                    cur.execute(f'''
+                        INSERT INTO GroupDetails(address_id)
+                        VALUES({address_id});
+                    ''')
+                    conn.commit()
+                    cur.execute(f'SELECT last_insert_rowid();')
+                    group_id = cur.fetchone()[0]
+                else:
+                    group_id = existing_group[0]
+                cur.execute(f'''
+                    UPDATE Groups
+                    SET group_id = {group_id}
+                    WHERE sevadar_id = {s_id};
+                ''')
+
+                cur.execute(f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
+
+            else:
+                cur.execute(f"""
+                    UPDATE SevadarAddress
+                    SET address_id = {address_id}
+                    WHERE sevadar_id = {s_id};
+                """)
+                cur.execute(f"DELETE FROM Groups WHERE sevadar_id = {s_id}")
+
+
+
+
         conn.commit()
     except Exception as e:
         print("Database error:",e)
@@ -178,8 +221,8 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
     finally:
         conn.close()
     ui.close()
-    global ex
-    ex.close()
+    # global ex
+    # ex.close()
     ex = display_sevadars.App()
 
 
@@ -187,6 +230,7 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
 def edit_sevadar(s_id,window):
     # import sys
     # app = QtWidgets.QApplication(sys.argv)
+    global MainWindow
     MainWindow = QtWidgets.QMainWindow()
     global ui
     ui = Ui(MainWindow,s_id)

@@ -81,7 +81,9 @@ class App(QWidget):
             self.tableWidget.setItem(i,6,QTableWidgetItem(pooja_date))
             self.tableWidget.setItem(i,7,QTableWidgetItem(s['start_yyyymm']))
             self.tableWidget.setItem(i,8,QTableWidgetItem('YES' if s['flexible'] else 'NO'))
-            self.tableWidget.setItem(i,9,QTableWidgetItem(str(s['group_id'])))
+
+            ############################################# To make it simple changed it to address_id ##################
+            self.tableWidget.setItem(i,9,QTableWidgetItem(str(s['address_id'] if s["group_id"] else "NA"))) #group_id
 
             self.tableaddress = QLabel()
             self.tableaddress.setText(s['line1']+'\n'+s['line2']+'\n'+s['line3']+'\n'+s['line4'])
@@ -113,7 +115,7 @@ class App(QWidget):
     def edit_button_callback(self, sevadar_id):
         # QApplication.closeAllWindows()
         # global ex
-        print('asdf')
+        print('edit', sevadar_id)
         # global app
         # app.quit()
         # import time

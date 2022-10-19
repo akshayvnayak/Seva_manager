@@ -29,10 +29,10 @@ def calc_panchanga(year,month):
 
 def assign_dates(database,year,month):
     month_panchanga = calc_panchanga(year,month)
-    # print(int(month_panchanga[month_panchanga['nakshatra'] == 22].date.head(1)))
+    print(int(month_panchanga[month_panchanga['nakshatra'] == 22].date.head(1)))
     month_calendar = monthcalendar(year,month)
     assigned_sevadars = {i+1:[] for i in range(monthrange(year,month)[1])}
-    # print(assigned_sevadars)
+    print(assigned_sevadars)
     try:
         con = sqlite3.connect(database)
         con.row_factory = dict_factory
@@ -53,7 +53,8 @@ def assign_dates(database,year,month):
         """)
         x = cur.fetchall()
 
-        # print(x)
+        print()
+        print("x",x)
         flexible = []
 
 
@@ -85,9 +86,14 @@ def assign_dates(database,year,month):
                 d = month_panchanga[month_panchanga['tithi'] == date].date.head(1)
                 if d.empty:
                     d = month_panchanga[month_panchanga['tithi'] == calc_decrement(date,30)].date.head(1)
+
             assigned_sevadars[int(d)].append(sevadar_id)
+            print()
+            print(i)
+            print(assigned_sevadars)
         
-        # print(flexible)
+        print(flexible)
+        # print(assigned_sevadars)
 
 
         ##################################################################################################################################
@@ -148,7 +154,7 @@ def assign_dates(database,year,month):
         for i in flexible:
             assigned_sevadars[randint(1,total_days)].append(i['sevadar_id'])
 
-        # print(assigned_sevadars)
+        print(assigned_sevadars)
         return assigned_sevadars
     except Exception as e:
         print(traceback.format_exc())
@@ -156,4 +162,4 @@ def assign_dates(database,year,month):
         con.close()
 
 if __name__ == '__main__':
-    assign_dates('data/Seva_manager.db',2021,1)
+    assign_dates('data/Seva_manager.db',2022,11)

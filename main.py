@@ -14,6 +14,7 @@ import overview
 import end_dates
 from cloud import drive_upload
 from PyQt5 import QtCore, QtGui, QtWidgets
+from datetime import datetime
 
 
 
@@ -28,6 +29,8 @@ class Ui_MainWindow(object):
         self.MainWindow = MainWindow
 
     def setupUi(self, MainWindow):
+        self.current_date = datetime.now()
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.resize(800, 600)
@@ -71,7 +74,7 @@ class Ui_MainWindow(object):
         self.year_spinBox = QtWidgets.QSpinBox(self.horizontalLayoutWidget)
         self.year_spinBox.setMinimum(2000)
         self.year_spinBox.setMaximum(9999)
-        self.year_spinBox.setProperty("value", 2021)
+        self.year_spinBox.setProperty("value", self.current_date.year if self.current_date.month!=1 else self.current_date.year+1)#display next month
         self.year_spinBox.setDisplayIntegerBase(10)
         self.year_spinBox.setObjectName("year_spinBox")
         self.horizontalLayout.addWidget(self.year_spinBox)
@@ -118,6 +121,7 @@ class Ui_MainWindow(object):
 
     def add_options(self,MainWindow):
         self.month_comboBox.addItems(months.values())
+        self.month_comboBox.setCurrentIndex(self.current_date.month%12)
     
     def connectUi(self,MainWindow):
         self.add_sevadar_button.clicked.connect(self.add_callback)
@@ -131,24 +135,24 @@ class Ui_MainWindow(object):
     def add_callback(self):
         print("add")
         add_window = QtWidgets.QMainWindow()
-        ui = add_sevadar_page.Ui_MainWindow(add_window)
+        self.add_sevadar_ui = add_sevadar_page.Ui_MainWindow(add_window)
         add_window.showMaximized()
         
     def display_callback(self):
         print("display")
-        ui = display_sevadars.App()
+        self.view_edit_ui = display_sevadars.App()
 
     def overview_callback(self):
         print("overview")
         year = self.year_spinBox.value()
         month = self.month_comboBox.currentIndex()+1
-        ui = overview.App(year,month)
+        self.overview_ui = overview.App(year,month)
 
     def view_end_callback(self):
         print("view end")
         year = self.year_spinBox.value()
         month = self.month_comboBox.currentIndex()+1
-        ui = end_dates.App(year,month)
+        self.end_dates_ui = end_dates.App(year,month)
         
 
 if __name__ == "__main__":

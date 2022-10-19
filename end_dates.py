@@ -1,3 +1,5 @@
+from datetime import datetime
+from distutils.log import error
 import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
@@ -30,7 +32,7 @@ class Ui_Dialog(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.horizontalLayoutWidget = QtWidgets.QWidget(Dialog)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(40, 50, 383, 80))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(40, 45, 383, 80))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -63,11 +65,18 @@ class Ui_Dialog(object):
         self.horizontalLayout.addWidget(self.year_spinBox)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
         self.sevadar_name_label = QtWidgets.QLabel(Dialog)
-        self.sevadar_name_label.setGeometry(QtCore.QRect(40, 20, 81, 31))
+        self.sevadar_name_label.setGeometry(QtCore.QRect(40, 20, 400, 31))
         self.sevadar_name_label.setObjectName("sevadar_name_label")
 
+        
+        self.error_msg = QtWidgets.QLabel(Dialog)
+        self.error_msg.setGeometry(QtCore.QRect(40, 90, 400, 31))
+        self.error_msg.setObjectName("error_msg")
+        self.error_msg.setVisible(False)
+        self.error_msg.setAutoFillBackground(True)
+
         self.retranslateUi(Dialog,s_id,s_name,ey,em)
-        self.buttonBox.accepted.connect(lambda : self.renew_accept_callback(s_id,self.year_spinBox.text(),self.month_comboBox.currentIndex()+1)) # type: ignore
+        self.buttonBox.accepted.connect(lambda : self.renew_accept_callback(s_id,self.year_spinBox.text(),self.month_comboBox.currentIndex()+1,ey,em)) # type: ignore
         self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -77,11 +86,18 @@ class Ui_Dialog(object):
         self.label.setText(_translate("Dialog", "New Pooja start date:"))
         self.month_label.setText(_translate("Dialog", "Month"))
         self.year_label.setText(_translate("Dialog", "Year"))
-        self.sevadar_name_label.setText(_translate("Dialog", "Sevadar Name: " + s_name))
+        self.sevadar_name_label.setText(_translate("Dialog","Sevadar : "+ s_name))
+        self.error_msg.setText(_translate("Dialog", "Renewal date cannot be less than previous ending date"))
         self.month_comboBox.addItems(sknames.months.values())
         self.month_comboBox.setCurrentIndex(em-1)
 #Main Window
-    def renew_accept_callback(self,sevadar_id,year,month):
+    def renew_accept_callback(self,sevadar_id,year,month, ey, em):
+        e_date = datetime(ey,em,1)
+        entered_date = datetime(int(year),int(month),1)
+        if( entered_date<e_date):
+            self.error_msg.setVisible(True)
+            return
+
         try:
             conn = sqlite3.connect('data\Seva_manager.db')
             conn.row_factory = dict_factory
@@ -192,7 +208,7 @@ class App(QWidget):
         # self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
     def renew_callback(self,sevadar_id,sevadar_name,ey,em):
-        print(sevadar_id,'renew')
+        print(sevadar_id,sevadar_name,'renew')
         d = QDialog()
         ui = Ui_Dialog(d)
         if em ==12:

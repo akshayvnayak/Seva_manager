@@ -178,14 +178,24 @@
     },
 
     "gotras": {
-        "1": "Koundinya",
-        "2": "Kaashyapa",
-        "3": "Vishvamitra",
-        "4": "Vaccha",
-        "5": "Kaunsha",
-        "6": "Bharadvaja",
-        "7": "Atri",
-        "8": "Vasishta",
-        "9": "Shreevatsa"
+        "1":"Gargya",
+        "2":"Athri",
+        "3":"Koundinya",
+        "4":"Bharadwaja",
+        "5":"Koushika",
+        "6":"ShankhaPingalaKounsa",
+        "7":"Kondinaya",
+        "8":"Atri",
+        "9":"Bharadvaja",
+        "10":"Gautama",
+        "11":"Kashyapa",
+        "12":"Kamshi",
+        "13":"Kausika",
+        "14":"Vatsa",
+        "15":"Vasishta",
+        "16":"Kaundinya",
+        "17":"Vishvamitra",
+        "18":"Kaushika",
+        "19":"Jamadagni"
   }
 }

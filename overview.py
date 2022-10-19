@@ -34,7 +34,9 @@ class App(QWidget):
         self.setLayout(self.layout)
    
         #Show window
-        self.show()
+        self.showMaximized()
+        print("overview displayed")
+
 
    
     #Create table
@@ -49,7 +51,7 @@ class App(QWidget):
 
         #Column count
         self.tableWidget.setColumnCount(8)
-        self.tableWidget.setHorizontalHeaderLabels(('Mon','Tue','Wen','Thu','Fri','Sat','Sun',''))
+        self.tableWidget.setHorizontalHeaderLabels(['Mon','Tue','Wen','Thu','Fri','Sat','Sun',''])
 
 
         bold_font = self.tableWidget.font()
@@ -99,7 +101,7 @@ class App(QWidget):
     def download_callback(self):
         create_pdf(self.year,self.month,self.assigned_dates)
         now = datetime.now()
-        fname = f'backup\{now.strftime("%d_%m_%Y_%H_%M")}_BACKUP_DB_{str(self.month)}_{str(self.year)}.db'
+        fname = f'backup\{now.strftime("%Y_%m_%d_%H_%M_%S")}_BACKUP_DB_{str(self.month)}_{str(self.year)}.db'
         copyfile('data\Seva_manager.db',fname)
         print("Back up done", fname)
 
