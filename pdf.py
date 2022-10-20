@@ -6,8 +6,9 @@ from traceback import format_exc
 from assign_dates import assign_dates
 
 from fpdf import FPDF
-from SanskritNames import samvatsaras,gotras
+from SanskritNames import samvatsaras, gotras
 from thirdparty.panchanga import panchanga as pan
+
 
 def dict_factory(cursor, row):
     d = {}
@@ -15,11 +16,12 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-def create_pdf(year,month,calendar_dict):
+
+def create_pdf(year, month, calendar_dict):
     seva_order = []
     total_count = 0
     for i in calendar_dict:
-        total_count+=len(calendar_dict[i])
+        total_count += len(calendar_dict[i])
     # print(total_count)
     try:
         conn = sqlite3.connect('data\Seva_manager.db')
@@ -29,16 +31,18 @@ def create_pdf(year,month,calendar_dict):
         conn.commit()
         # print("Opened database successfully")
 
-        ######## Create a dictionary seva_order, with pno as key and sevadar_details as value
+        # Create a dictionary seva_order, with pno as key and sevadar_details as value
 
-        prev_month = str(year if month > 1 else year-1) + '-' + format(month-1 if month > 1 else 12, '02d')
-        cur.execute(f"select count from PoojaCount where yyyymm = '{prev_month}'")
+        prev_month = str(year if month > 1 else year-1) + '-' + \
+            format(month-1 if month > 1 else 12, '02d')
+        cur.execute(
+            f"select count from PoojaCount where yyyymm = '{prev_month}'")
         pno = cur.fetchone()
-        if not pno: 
+        if not pno:
             pno = total_count+1
         else:
             pno = pno['count'] + total_count+1
-            
+
         # pno = 20
 
         group = {}
@@ -52,65 +56,67 @@ def create_pdf(year,month,calendar_dict):
                         from SevadarDetailsRecent where sevadar_id = {s_id}
                         
                         """)
-                pno-=1
+                pno -= 1
                 # print(s_id,pno)
                 # seva_order[pno] = cur.fetchone()
                 sevadar_details = cur.fetchone()
                 # print(pno,seva_order[pno])
                 # print()
-                if (g:=sevadar_details['group_id']) != None:
+                if (g := sevadar_details['group_id']) != None:
                     # print(sevadar_details)
                     if g not in group:
-                        group[g] = {'pno':pno,'group_date': i}
+                        group[g] = {'pno': pno, 'group_date': i}
                         group_env.append(sevadar_details['sevadar_id'])
-                    sevadar_details['pno'] = str(pno) + ' | '+str(group[g]['pno'])+'-'+str(group[g]['group_date'])
+                    sevadar_details['pno'] = str(
+                        pno) + ' | '+str(group[g]['pno'])+'-'+str(group[g]['group_date'])
                 else:
                     sevadar_details['pno'] = str(pno)
                 sevadar_details['date'] = i
-                # print(sevadar_details,sevadar_details['line1'])
+                # print(sevadar_details, sevadar_details['line1'])
                 seva_order.append(sevadar_details)
 
         # print(pno)
-        cur.execute(f"insert or replace into PoojaCount values('{str(year)+'-'+format(month,'02d')}',{pno+total_count-1})")
+        cur.execute(
+            f"insert or replace into PoojaCount values('{str(year)+'-'+format(month,'02d')}',{pno+total_count-1})")
         conn.commit()
 
     except Exception as e:
-            print(format_exc())
+        print(format_exc())
     finally:
         conn.close()
-
 
     ####################################################################################################
     ########################################### Create a pdf ###########################################
     ####################################################################################################
 
-    pdf = FPDF('L','mm',(99,210))
-    env_pdf = FPDF('L','mm',(109.5502 , 219.075))
+    pdf = FPDF('L', 'mm', (99, 210))
+    env_pdf = FPDF('L', 'mm', (109.5502, 219.075))
     # env_pdf.compress = False
     env_pdf.set_font('Arial', '', 12)
     pdf.compress = False
 
-    first_day = datetime(year,month,1).weekday()
+    first_day = datetime(year, month, 1).weekday()
 
     for i in reversed(seva_order):
         name = i['name']
-        date = format(i['date'],'02d')+'-'+format(month,'02d')+'-'+str(year)
+        date = format(i['date'], '02d')+'-'+format(month, '02d')+'-'+str(year)
         pno = str(i['pno'])
-        pcount = format((month - int(i['start_yyyymm'][-2:])+13)%12,'02d')
+        pcount = format((month - int(i['start_yyyymm'][-2:])+13) % 12, '02d')
 
-        d = pan.gregorian_to_jd(pan.Date(year,month,i['date']))
-        vaara = (first_day+i['date'])%6 + 1
-        tithi = pan.tithi(d,pan.mangaluru)[0]
+        d = pan.gregorian_to_jd(pan.Date(year, month, i['date']))
+        vaara = (first_day+i['date']) % 7 + 1
+        # print(i, first_day, vaara)
+        tithi = pan.tithi(d, pan.mangaluru)[0]
         if tithi > 15:
             paksha = 2
             tithi = tithi-15
         else:
             paksha = 1
-        maasa = pan.masa(d,pan.mangaluru)[0]
+        maasa = pan.masa(d, pan.mangaluru)[0]
         ritu = (maasa+1)//2
-        comp_date = format(month,'02d')+format(i['date'],'02d')
+        comp_date = format(month, '02d')+format(i['date'], '02d')
         ayana = int(comp_date >= '0114' and comp_date <= '0714')+1
-        samvatsara = pan.samvatsara(d,maasa)
+        samvatsara = pan.samvatsara(d, maasa)
 
         rashi = i['rashi']
         nakshatra = i['nakshatra']
@@ -121,53 +127,50 @@ def create_pdf(year,month,calendar_dict):
             # l1 = str(i['pno'])
             # print(l1)
             env_pdf.add_page()
-            env_pdf.image('templates/envelope_without_address.jpg',0,0,219.075,109.5502)
-            env_pdf.text(20,48,pno)
-            env_pdf.text(110,48,i['line1'])
-            env_pdf.text(110,56.15,i['line2'])
-            env_pdf.text(110,64.3,i['line3'])
-            env_pdf.text(110,72.45,i['line4'])
-
+            env_pdf.image('templates/envelope_without_address.jpg',
+                          0, 0, 219.075, 109.5502)
+            env_pdf.text(20, 48, pno)
+            env_pdf.text(110, 48, i['line1'])
+            env_pdf.text(110, 56.15, i['line2'])
+            env_pdf.text(110, 64.3, i['line3'])
+            env_pdf.text(110, 72.45, i['line4'])
 
         pdf.add_page()
-        pdf.image("templates/invoice.jpg", 0, 0,210,99)
+        pdf.image("templates/invoice.jpg", 0, 0, 210, 99)
 
         pdf.set_font('Arial', 'B', 13.5)
-        pdf.text(58,39.5,name)
-        pdf.text(128,48.2,pcount)
+        pdf.text(58, 39.5, name)
+        pdf.text(128, 48.2, pcount)
 
         pdf.set_font('Arial', '', 13)
-        pdf.text(29,28,pno)
-        pdf.text(163,28,date)
+        pdf.text(29, 28, pno)
+        pdf.text(163, 28, date)
 
-        pdf.image(f"templates/samvatsaras/{samvatsara}.jpg", 10, 52.3,h = 7)
-        pdf.image(f"templates/ayanas/{ayana}.jpg", 63, 52.15,h = 7)
-        pdf.image(f"templates/ritus/{ritu}.jpg", 99, 52.2,h = 7)
-        pdf.image(f"templates/maasas/{maasa}.jpg", 133.5, 52.3,h = 7)
-        pdf.image(f"templates/pakshas/{paksha}.jpg", 170.5, 52.2,h = 7)
+        pdf.image(f"templates/samvatsaras/{samvatsara}.jpg", 10, 52.3, h=7)
+        pdf.image(f"templates/ayanas/{ayana}.jpg", 63, 52.15, h=7)
+        pdf.image(f"templates/ritus/{ritu}.jpg", 99, 52.2, h=7)
+        pdf.image(f"templates/maasas/{maasa}.jpg", 133.5, 52.3, h=7)
+        pdf.image(f"templates/pakshas/{paksha}.jpg", 170.5, 52.2, h=7)
 
-        pdf.image(f"templates/tithis/{tithi}.jpg", 14, 61.27,h = 7)
-        pdf.image(f"templates/vaaras/{vaara}.jpg", 50, 61,h = 7)
+        pdf.image(f"templates/tithis/{tithi}.jpg", 14, 61.27, h=7)
+        pdf.image(f"templates/vaaras/{vaara}.jpg", 50, 61, h=7)
 
-        pdf.image(f"templates/rashis/{rashi}.jpg", 26, 83,h = 7)
-        pdf.image(f"templates/nakshatras/{nakshatra}.jpg", 78.5, 83,h = 7)
-        pdf.text(159,87.6,gotras[f'{gotra}'])
+        pdf.image(f"templates/rashis/{rashi}.jpg", 26, 83, h=7)
+        pdf.image(f"templates/nakshatras/{nakshatra}.jpg", 78.5, 83, h=7)
+        pdf.text(159, 87.6, gotras[f'{gotra}'])
 
+    yyyymm = str(year)+'_'+format(month, '02d')
 
-    yyyymm = str(year)+'_'+format(month,'02d')
-    
     if not os.path.exists('PDFs\\'+yyyymm):
         os.makedirs('PDFs\\'+yyyymm)
-    
-    pdf.output(f"PDFs\{yyyymm}\invoice_{yyyymm}.pdf",'F')
-    env_pdf.output(f"PDFs\{yyyymm}\envelope_{yyyymm}.pdf",'F')
-    print("PDF saved")
 
-    
+    pdf.output(f"PDFs\{yyyymm}\invoice_{yyyymm}.pdf", 'F')
+    env_pdf.output(f"PDFs\{yyyymm}\envelope_{yyyymm}.pdf", 'F')
+    print("PDF saved")
 
 
 if __name__ == "__main__":
-    month = 1
-    year = 2021
-    calendar_dict = assign_dates('data/Seva_manager.db',year,month)
-    create_pdf(year,month,calendar_dict)
+    month = 11
+    year = 2022
+    calendar_dict = assign_dates('data/Seva_manager.db', year, month)
+    create_pdf(year, month, calendar_dict)
