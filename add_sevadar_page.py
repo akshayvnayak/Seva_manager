@@ -103,6 +103,11 @@ def add_sevadar(sevadar_details_dict,window):
 class Ui_MainWindow(QWidget):
     def __init__(self, window):
         super().__init__()
+
+        
+        self.default_font = QFont()
+        self.default_font.setPointSize(15)
+
         self.setupUi(window)
 
     def setupUi(self, MainWindow):
@@ -112,16 +117,16 @@ class Ui_MainWindow(QWidget):
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.centralwidget.setFont(self.default_font)
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
         self.gridLayoutWidget = QWidget(self.centralwidget)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(20,10, 814, 531))
+        self.gridLayoutWidget.setGeometry(QRect(200,20, 500, 400))
         
-        self.buttonBox.setGeometry(QRect(390, 610, 193, 28))
+        self.buttonBox.setGeometry(QRect(450, 590, 300, 40))
         self.buttonBox.setStandardButtons(
             QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
-
 
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -485,7 +490,7 @@ class Ui_MainWindow(QWidget):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate(
-            "MainWindow", u"MainWindow", None))
+            "MainWindow", u"Add Sevadar", None))
         self.label_date.setText(QCoreApplication.translate(
             "MainWindow", u"Seva date preference", None))
         self.label_start_month.setText(

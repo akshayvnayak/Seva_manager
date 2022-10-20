@@ -234,6 +234,7 @@ def edit_sevadar(s_id,window):
     MainWindow = QtWidgets.QMainWindow()
     global ui
     ui = Ui(MainWindow,s_id)
+    MainWindow.setWindowTitle("Edit Sevadar")
     MainWindow.showMaximized()
     global ex 
     ex = window

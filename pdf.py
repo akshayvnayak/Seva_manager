@@ -63,7 +63,7 @@ def create_pdf(year,month,calendar_dict):
                     if g not in group:
                         group[g] = {'pno':pno,'group_date': i}
                         group_env.append(sevadar_details['sevadar_id'])
-                    sevadar_details['pno'] = str(group[g]['pno'])+'/'+str(group[g]['group_date'])
+                    sevadar_details['pno'] = str(pno) + ' | '+str(group[g]['pno'])+'-'+str(group[g]['group_date'])
                 else:
                     sevadar_details['pno'] = str(pno)
                 sevadar_details['date'] = i
@@ -152,13 +152,15 @@ def create_pdf(year,month,calendar_dict):
         pdf.image(f"templates/rashis/{rashi}.jpg", 26, 83,h = 7)
         pdf.image(f"templates/nakshatras/{nakshatra}.jpg", 78.5, 83,h = 7)
         pdf.text(159,87.6,gotras[f'{gotra}'])
-    mmyyyy = format(month,'02d')+'_'+str(year)
+
+
+    yyyymm = str(year)+'_'+format(month,'02d')
     
-    if not os.path.exists('PDFs\\'+mmyyyy):
-        os.makedirs('PDFs\\'+mmyyyy)
+    if not os.path.exists('PDFs\\'+yyyymm):
+        os.makedirs('PDFs\\'+yyyymm)
     
-    pdf.output(f"PDFs\{mmyyyy}\invoice_{mmyyyy}.pdf",'F')
-    env_pdf.output(f"PDFs\{mmyyyy}\envelope_{mmyyyy}.pdf",'F')
+    pdf.output(f"PDFs\{yyyymm}\invoice_{yyyymm}.pdf",'F')
+    env_pdf.output(f"PDFs\{yyyymm}\envelope_{yyyymm}.pdf",'F')
     print("PDF saved")
 
     

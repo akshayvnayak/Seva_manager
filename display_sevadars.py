@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QFont
 import sqlite3
 from traceback import format_exc
 import SanskritNames as sknames
@@ -16,7 +17,12 @@ def dict_factory(cursor, row):
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = 'PyQt5 - QTableWidget'
+        
+        self.default_font = QFont()
+        self.default_font.setPointSize(13)
+
+        self.setFont(self.default_font)
+        self.title = 'Sevadars List'
         self.left = 0
         self.top = 0
         self.width = 1200
@@ -61,8 +67,11 @@ class App(QWidget):
 
         #Column count
         self.tableWidget.setColumnCount(13)
-        self.tableWidget.setHorizontalHeaderLabels(['Id','Name','Rashi','Nakshatra','Gotra','Seva Date basis','Preferred date','Start month','Flexible','Group id','Address'])
-
+        self.tableWidget.setHorizontalHeaderLabels(['Id','Name','Rashi','Nakshatra','Gotra','Seva Date basis','Preferred date','Start month','Flexible','Group id','Address',"",''])
+        # self.default_font.setBold(True)
+        self.default_font.setCapitalization(True)
+        self.default_font.setUnderline(True)
+        self.tableWidget.horizontalHeader().setFont(self.default_font)
 
         for i,s in enumerate(sevadars_details):
             self.tableWidget.setItem(i,0,QTableWidgetItem(str(s['sevadar_id'])))
@@ -87,6 +96,7 @@ class App(QWidget):
 
             self.tableaddress = QLabel()
             self.tableaddress.setText(s['line1']+'\n'+s['line2']+'\n'+s['line3']+'\n'+s['line4'])
+            self.tableaddress.setMargin(10)
             self.tableWidget.setCellWidget(i,10,self.tableaddress)
             # self.tableWidget.setItem(i,10,QTableWidgetItem(s['line1']+'\n'+s['line2']+'\n'+s['line3']+'\n'+s['line4']))
             self.tableWidget.setItem(i,11,QTableWidgetItem(type=2))
@@ -102,10 +112,15 @@ class App(QWidget):
             delete_button.clicked.connect(lambda x, sevadar_id = s['sevadar_id'] : self.show_delete_popup(sevadar_id))
             self.tableWidget.setCellWidget(i,12,delete_button)
             
-        
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
-        self.tableWidget.resizeRowsToContents()
-        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.setContentsMargins(50,5,5,5)
+
+        
+    
+
+        # self.tableWidget.setStyleSheet("QTableWidget { padding: 5px ; }")
 
         self.tableWidget.verticalHeader().hide()
         #Table will fit the screen horizontally

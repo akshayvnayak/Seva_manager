@@ -3,6 +3,7 @@ from sqlite3.dbapi2 import DataError
 import sys
 
 from PyQt5 import QtCore
+from PyQt5.QtGui import QFont
 from assign_dates import assign_dates
 from pdf import create_pdf
 
@@ -16,6 +17,12 @@ from datetime import datetime
 class App(QWidget):
     def __init__(self,year,month):
         super().__init__()
+        
+        self.default_font = QFont()
+        self.default_font.setPointSize(13)
+
+        self.setFont(self.default_font)
+
         self.title = str(month)+'-'+str(year)+' Calendar overview'
         self.left = 0
         self.top = 0
@@ -71,6 +78,7 @@ class App(QWidget):
                         # date_label = QLabel()
                         # date_label.setText(str(date))
                         # layout.addWidget(date_label)
+                        
                         text =str(date)#+'\n'
 
 
@@ -101,9 +109,10 @@ class App(QWidget):
     def download_callback(self):
         create_pdf(self.year,self.month,self.assigned_dates)
         now = datetime.now()
-        fname = f'backup\{now.strftime("%Y_%m_%d_%H_%M_%S")}_BACKUP_DB_{str(self.month)}_{str(self.year)}.db'
+        fname = f'backup\{now.strftime("%Y_%m_%d_%H_%M_%S")}_BACKUP_DB_{str(self.year)}_{str(self.month)}.db'
         copyfile('data\Seva_manager.db',fname)
         print("Back up done", fname)
+        self.close()
 
 if __name__ == "__main__":
     global app

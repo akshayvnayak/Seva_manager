@@ -1,3 +1,4 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
 from datetime import datetime
 from distutils.log import error
 import sys
@@ -13,35 +14,40 @@ def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
-    return d			
-
-from PyQt5 import QtCore, QtGui, QtWidgets
+    return d
 
 
 class Ui_Dialog(object):
-    def __init__(self,d) -> None:
+    def __init__(self, d) -> None:
         super().__init__()
+
+        self.default_font = QtGui.QFont()
+        self.default_font.setPointSize(12)
+
         self.d = d
 
-    def setupUi(self, Dialog,s_id,s_name,ey,em):
+    def setupUi(self, Dialog, s_id, s_name, ey, em):
         Dialog.setObjectName("Dialog")
         Dialog.resize(482, 216)
+        Dialog.setFont(self.default_font)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(70, 160, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.horizontalLayoutWidget = QtWidgets.QWidget(Dialog)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(40, 45, 383, 80))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(40, 60, 383, 80))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout_2 = QtWidgets.QVBoxLayout(
+            self.horizontalLayoutWidget)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label = QtWidgets.QLabel(self.horizontalLayoutWidget)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setContentsMargins(9, -1, 7, -1)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setSpacing(13)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.month_label = QtWidgets.QLabel(self.horizontalLayoutWidget)
@@ -65,36 +71,42 @@ class Ui_Dialog(object):
         self.horizontalLayout.addWidget(self.year_spinBox)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
         self.sevadar_name_label = QtWidgets.QLabel(Dialog)
-        self.sevadar_name_label.setGeometry(QtCore.QRect(40, 20, 400, 31))
+        self.sevadar_name_label.setGeometry(QtCore.QRect(20, 10, 400, 31))
         self.sevadar_name_label.setObjectName("sevadar_name_label")
+        self.default_font.setBold(True)
+        self.sevadar_name_label.setFont(self.default_font)
+        self.sevadar_name_label.setAlignment(QtCore.Qt.AlignCenter)
 
-        
         self.error_msg = QtWidgets.QLabel(Dialog)
         self.error_msg.setGeometry(QtCore.QRect(40, 90, 400, 31))
         self.error_msg.setObjectName("error_msg")
         self.error_msg.setVisible(False)
         self.error_msg.setAutoFillBackground(True)
 
-        self.retranslateUi(Dialog,s_id,s_name,ey,em)
-        self.buttonBox.accepted.connect(lambda : self.renew_accept_callback(s_id,self.year_spinBox.text(),self.month_comboBox.currentIndex()+1,ey,em)) # type: ignore
-        self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
+        self.retranslateUi(Dialog, s_id, s_name, ey, em)
+        self.buttonBox.accepted.connect(lambda: self.renew_accept_callback(
+            s_id, self.year_spinBox.text(), self.month_comboBox.currentIndex()+1, ey, em))  # type: ignore
+        self.buttonBox.rejected.connect(Dialog.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def retranslateUi(self, Dialog,s_id,s_name,ey,em):
+    def retranslateUi(self, Dialog, s_id, s_name, ey, em):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "New Pooja start date:"))
         self.month_label.setText(_translate("Dialog", "Month"))
         self.year_label.setText(_translate("Dialog", "Year"))
-        self.sevadar_name_label.setText(_translate("Dialog","Sevadar : "+ s_name))
-        self.error_msg.setText(_translate("Dialog", "Renewal date cannot be less than previous ending date"))
+        self.sevadar_name_label.setText(
+            _translate("Dialog", "Sevadar : " + s_name))
+        self.error_msg.setText(_translate(
+            "Dialog", "Renewal date cannot be less than previous ending date"))
         self.month_comboBox.addItems(sknames.months.values())
         self.month_comboBox.setCurrentIndex(em-1)
-#Main Window
-    def renew_accept_callback(self,sevadar_id,year,month, ey, em):
-        e_date = datetime(ey,em,1)
-        entered_date = datetime(int(year),int(month),1)
-        if( entered_date<e_date):
+# Main Window
+
+    def renew_accept_callback(self, sevadar_id, year, month, ey, em):
+        e_date = datetime(ey, em, 1)
+        entered_date = datetime(int(year), int(month), 1)
+        if (entered_date < e_date):
             self.error_msg.setVisible(True)
             return
 
@@ -118,11 +130,12 @@ class Ui_Dialog(object):
 
 
 class App(QWidget):
-    def __init__(self,year,month):
+    def __init__(self, year, month):
         super().__init__()
         self.year = year
         self.month = month
-        self.title = 'Ending poojas from '+str(self.year)+'-'+format(self.month,'02')
+        self.title = 'Ending poojas from ' + \
+            str(self.year)+'-'+format(self.month, '02')
         self.left = 0
         self.top = 0
         self.width = 1200
@@ -131,7 +144,7 @@ class App(QWidget):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.createTable(year,month)
+        self.createTable(year, month)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tableWidget)
@@ -139,15 +152,14 @@ class App(QWidget):
 
         self.showMaximized()
 
-    def createTable(self,year,month):
+    def createTable(self, year, month):
         self.tableWidget = QTableWidget()
-        
+
         # if month == 1:
         #     month = 12
         #     year -= 1
         # else:
         #     month = month - 1
-            
 
         try:
             conn = sqlite3.connect('data\Seva_manager.db')
@@ -166,21 +178,21 @@ class App(QWidget):
             print(format_exc())
         finally:
             conn.close()
-        
-        #Row count
+
+        # Row count
         self.tableWidget.setRowCount(len(sevadars_details))
         # print(sevadars_details)
-        
 
-        #Column count
+        # Column count
         self.tableWidget.setColumnCount(5)
-        self.tableWidget.setHorizontalHeaderLabels(['Id','Name','Start month','End month',''])
+        self.tableWidget.setHorizontalHeaderLabels(
+            ['Id', 'Name', 'Start month', 'End month', ''])
 
-
-        for i,s in enumerate(sevadars_details):
-            self.tableWidget.setItem(i,0,QTableWidgetItem(str(s['sevadar_id'])))
-            self.tableWidget.setItem(i,1,QTableWidgetItem(s['name']))
-            self.tableWidget.setItem(i,2,QTableWidgetItem(s['start_yyyymm']))
+        for i, s in enumerate(sevadars_details):
+            self.tableWidget.setItem(
+                i, 0, QTableWidgetItem(str(s['sevadar_id'])))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(s['name']))
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(s['start_yyyymm']))
             sy = int(s['start_yyyymm'][:4])
             sm = int(s['start_yyyymm'][5:7])
             if sm == 1:
@@ -190,44 +202,44 @@ class App(QWidget):
                 em = sm - 1
                 ey = sy+1
 
-            self.tableWidget.setItem(i,3,QTableWidgetItem(f"{ey}-{format(em,'02d')}"))
+            self.tableWidget.setItem(
+                i, 3, QTableWidgetItem(f"{ey}-{format(em,'02d')}"))
 
-            self.tableWidget.setItem(i,4,QTableWidgetItem(type=2))
+            self.tableWidget.setItem(i, 4, QTableWidgetItem(type=2))
             edit_button = QPushButton()
             edit_button.setText('RENEW')
             edit_button.setGeometry(QtCore.QRect(310, 390, 181, 31))
-            edit_button.clicked.connect(lambda  x,sevadar_id = s['sevadar_id'],sevadar_name = s['name'] ,ey = ey,em = em: self.renew_callback(sevadar_id,sevadar_name,ey,em))
-            self.tableWidget.setCellWidget(i,4,edit_button)
+            edit_button.clicked.connect(lambda x, sevadar_id=s['sevadar_id'], sevadar_name=s['name'], ey=ey, em=em: self.renew_callback(
+                sevadar_id, sevadar_name, ey, em))
+            self.tableWidget.setCellWidget(i, 4, edit_button)
 
         # self.tableWidget.resizeRowsToContents()
         # self.tableWidget.resizeColumnsToContents()
 
         self.tableWidget.verticalHeader().hide()
-        #Table will fit the screen horizontally
+        # Table will fit the screen horizontally
         # self.tableWidget.horizontalHeader().setStretchLastSection(True)
         # self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-    def renew_callback(self,sevadar_id,sevadar_name,ey,em):
-        print(sevadar_id,sevadar_name,'renew')
+    def renew_callback(self, sevadar_id, sevadar_name, ey, em):
+        print(sevadar_id, sevadar_name, 'renew')
         d = QDialog()
         ui = Ui_Dialog(d)
-        if em ==12:
+        if em == 12:
             em = 1
             ey += 1
         else:
             em += 1
-        ui.setupUi(d,sevadar_id,sevadar_name,ey,em)
+        ui.setupUi(d, sevadar_id, sevadar_name, ey, em)
         d.show()
         d.exec_()
         self.close()
-        ex = App(self.year,self.month)
+        ex = App(self.year, self.month)
 
-
-        
 
 if __name__ == '__main__':
-        global app
-        app = QApplication(sys.argv)
-        global ex
-        ex = App(2023,1)
-        sys.exit(app.exec())
+    global app
+    app = QApplication(sys.argv)
+    global ex
+    ex = App(2023, 1)
+    sys.exit(app.exec())
