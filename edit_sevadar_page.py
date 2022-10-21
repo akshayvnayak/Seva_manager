@@ -4,16 +4,17 @@ from tokenize import group
 from traceback import format_exc
 import traceback
 from PyQt5 import QtWidgets
-from add_sevadar_page import Ui_MainWindow,dict_factory
+from add_sevadar_page import Ui_MainWindow, dict_factory
 import display_sevadars
 
-class Ui ( Ui_MainWindow):
-    def __init__(self,window,s_id):
+
+class Ui (Ui_MainWindow):
+    def __init__(self, window, s_id):
         # print('s_id',s_id)
         super().__init__(window)
         self.setup(s_id)
-    
-    def setup(self,s_id):
+
+    def setup(self, s_id):
         self.s_id = s_id
         # sevadar = {}
         try:
@@ -26,7 +27,7 @@ class Ui ( Ui_MainWindow):
             cur.execute(f"""
                 select * from sevadardetailsRecent where sevadar_id = {s_id};
             """)
-            self.sevadar= cur.fetchone()
+            self.sevadar = cur.fetchone()
             # print(sevadar)
             # x = self.sevadar
             # print(self.sevadar)
@@ -43,8 +44,9 @@ class Ui ( Ui_MainWindow):
         self.comboBox_rashi.setCurrentIndex(self.sevadar['rashi']-1)
         self.comboBox_nakshatra.setCurrentIndex(self.sevadar['nakshatra']-1)
         self.comboBox_gotra.setCurrentIndex(self.sevadar['gotra']-1)
-        self.comboBox_start_month.setCurrentIndex(int(self.sevadar['start_yyyymm'][-2:])-1)
-        self.spinBox_date.setValue(int(self.sevadar['start_yyyymm'][:4]))
+        self.comboBox_start_month.setCurrentIndex(
+            int(self.sevadar['start_yyyymm'][-2:])-1)
+        self.spinBox_start_year.setValue(int(self.sevadar['start_yyyymm'][:4]))
         self.radioButton_date_basis[self.sevadar['pooja_basis']].click()
 
         # "date":(self.spinBox_date.value(),
@@ -56,10 +58,11 @@ class Ui ( Ui_MainWindow):
         if p == 0:
             self.spinBox_date.setValue(self.sevadar['pooja_date'])
         elif p == 1:
-            self.comboBox_nakshatra_2.setCurrentIndex(self.sevadar['pooja_date']-1)
+            self.comboBox_nakshatra_2.setCurrentIndex(
+                self.sevadar['pooja_date']-1)
         elif p == 2:
             self.spinBox_week_no.setValue(self.sevadar['pooja_date']//10)
-            self.comboBox_day.setCurrentIndex(self.sevadar['pooja_date']%10)
+            self.comboBox_day.setCurrentIndex(self.sevadar['pooja_date'] % 10)
         else:
             self.comboBox_tithi.setCurrentIndex(self.sevadar['pooja_date']-1)
         self.checkBox_flexible.setChecked(self.sevadar['flexible'])
@@ -70,40 +73,45 @@ class Ui ( Ui_MainWindow):
         self.radioButton_group_no.setChecked(self.sevadar['group_id'] == None)
 
         self.buttonBox.accepted.disconnect()
-        self.buttonBox.accepted.connect(lambda s_id = self.s_id: edit_sevadar_callback(s_id,self.sevadar,
-        {
-            "name":self.lineEdit_name.text(),
-            "rashi": self.comboBox_rashi.currentIndex()+1,
-            "nakshatra": self.comboBox_nakshatra.currentIndex()+1,
-            "gotra": self.comboBox_gotra.currentIndex()+1,
-            "start_month":self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1,"02d"),
-            "date_basis":self.radioButtonGroup_date_basis.checkedId(),
-            "date":(self.spinBox_date.value(),
-                    self.comboBox_nakshatra_2.currentIndex()+1,
-                    self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
-                    self.comboBox_tithi.currentIndex()+1),
-            "flexible_flag":self.checkBox_flexible.isChecked(),
-            "new_address_flag":self.radioButton_new_address.isChecked(),
-            "group_flag":self.radioButton_group_yes.isChecked(),
-            "address_id":int(self.comboBox_address.currentText().split(',')[0]) if  self.comboBox_address.currentText() != "" else -1 ,
-            "address":[i.text() for i in self.lineEdit_address]
-        }))
+        self.buttonBox.accepted.connect(
+            lambda s_id=self.s_id: edit_sevadar_callback(
+                s_id,
+                self.sevadar,
+                {
+                    "name": self.lineEdit_name.text(),
+                    "rashi": self.comboBox_rashi.currentIndex()+1,
+                    "nakshatra": self.comboBox_nakshatra.currentIndex()+1,
+                    "gotra": self.comboBox_gotra.currentIndex()+1,
+                    "start_month": self.spinBox_start_year.text()+"-"+format(self.comboBox_start_month.currentIndex()+1, "02d"),
+                    "date_basis": self.radioButtonGroup_date_basis.checkedId(),
+                    "date": (self.spinBox_date.value(),
+                             self.comboBox_nakshatra_2.currentIndex()+1,
+                             self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
+                             self.comboBox_tithi.currentIndex()+1),
+                    "flexible_flag": self.checkBox_flexible.isChecked(),
+                    "new_address_flag": self.radioButton_new_address.isChecked(),
+                    "group_flag": self.radioButton_group_yes.isChecked(),
+                    "address_id": int(self.comboBox_address.currentText().split(',')[0]) if self.comboBox_address.currentText() != "" else -1,
+                    "address": [i.text() for i in self.lineEdit_address]
+                }
+            )
+        )
 
 
-
-def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
+def edit_sevadar_callback(s_id, prev_sevadar, sevadar_details_dict):
     global MainWindow
     MainWindow.close()
     global ex
     ex.close()
     # ex = display_sevadars.App()
-    sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(*sevadar_details_dict.values())
+    sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(
+        *sevadar_details_dict.values())
     print('previous', prev_sevadar)
     print(sevadar_details)
     try:
         conn = sqlite3.connect('data\Seva_manager.db')
         # conn.row_factory = dict_factory
-        print("Opened database successfully",__name__)
+        print("Opened database successfully", __name__)
         cur = conn.cursor()
         cur.execute("PRAGMA foreign_keys=ON")
         conn.commit()
@@ -121,16 +129,18 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
         # cur.execute('SELECT last_insert_rowid()')
         # sevadar_id = cur.fetchone()[0]
         # print(sevadar_id)
-        cur.execute(f"SELECT * from SevadarsFlexible WHERE sevadar_id = {s_id};")
+        cur.execute(
+            f"SELECT * from SevadarsFlexible WHERE sevadar_id = {s_id};")
 
         # print('flexible',)
-        if sevadar_details.flexible_flag :
+        if sevadar_details.flexible_flag:
             if cur.fetchone() == None:
                 cur.execute(f"INSERT INTO SevadarsFlexible VALUES ({s_id})")
         else:
             if cur.fetchone() != None:
-                cur.execute(f"DELETE FROM SevadarsFlexible WHERE sevadar_id = {s_id}")
-            
+                cur.execute(
+                    f"DELETE FROM SevadarsFlexible WHERE sevadar_id = {s_id}")
+
         cur.execute(f"""
             UPDATE SevaStartMonths
             SET start_yyyymm = '{sevadar_details.start_month}'
@@ -148,13 +158,16 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
             conn.commit()
             cur.execute('SELECT last_insert_rowid()')
             address_id = cur.fetchone()[0]
-        
-        if sevadar_details.group_flag != (prev_sevadar['group_id']!=None):# or sevadar_details.group_flag != None:
+
+        # or sevadar_details.group_flag != None:
+        if sevadar_details.group_flag != (prev_sevadar['group_id'] != None):
             if sevadar_details.group_flag:
                 conn.commit()
-                cur.execute(f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
-                conn.commit()                
-                cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
+                cur.execute(
+                    f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
+                conn.commit()
+                cur.execute(
+                    f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
                 existing_group = cur.fetchone()
                 if existing_group == None:
                     cur.execute(f'''
@@ -171,7 +184,8 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
                     VALUES({s_id},{group_id})
                 ''')
 
-                cur.execute(f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
+                cur.execute(
+                    f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
 
             else:
                 cur.execute(f"""
@@ -183,7 +197,8 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
         else:
             if sevadar_details.group_flag:
                 conn.commit()
-                cur.execute(f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
+                cur.execute(
+                    f'SELECT * FROM GroupDetails WHERE address_id = {address_id}')
                 existing_group = cur.fetchone()
                 if existing_group == None:
                     cur.execute(f'''
@@ -201,7 +216,8 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
                     WHERE sevadar_id = {s_id};
                 ''')
 
-                cur.execute(f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
+                cur.execute(
+                    f"DELETE FROM SevadarAddress WHERE sevadar_id = {s_id}")
 
             else:
                 cur.execute(f"""
@@ -211,12 +227,9 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
                 """)
                 cur.execute(f"DELETE FROM Groups WHERE sevadar_id = {s_id}")
 
-
-
-
         conn.commit()
     except Exception as e:
-        print("Database error:",e)
+        print("Database error:", e)
         print(traceback.format_exc())
     finally:
         conn.close()
@@ -226,17 +239,16 @@ def edit_sevadar_callback(s_id,prev_sevadar,sevadar_details_dict):
     ex = display_sevadars.App()
 
 
-
-def edit_sevadar(s_id,window):
+def edit_sevadar(s_id, window):
     # import sys
     # app = QtWidgets.QApplication(sys.argv)
     global MainWindow
     MainWindow = QtWidgets.QMainWindow()
     global ui
-    ui = Ui(MainWindow,s_id)
+    ui = Ui(MainWindow, s_id)
     MainWindow.setWindowTitle("Edit Sevadar")
     MainWindow.showMaximized()
-    global ex 
+    global ex
     ex = window
     # return MainWindow
     # app.exec()
