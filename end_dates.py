@@ -189,15 +189,16 @@ class App(QWidget):
         # print(sevadars_details)
 
         # Column count
-        self.tableWidget.setColumnCount(5)
+        self.tableWidget.setColumnCount(6)
         self.tableWidget.setHorizontalHeaderLabels(
-            ['Id', 'Name', 'Start month', 'End month', ''])
+            ['Id', 'Name', 'Start month', 'End month', 'Pooja number', ''])
 
         for i, s in enumerate(sevadars_details):
             self.tableWidget.setItem(
                 i, 0, QTableWidgetItem(str(s['sevadar_id'])))
             self.tableWidget.setItem(i, 1, QTableWidgetItem(s['name']))
             self.tableWidget.setItem(i, 2, QTableWidgetItem(s['start_yyyymm']))
+
             sy = int(s['start_yyyymm'][:4])
             sm = int(s['start_yyyymm'][5:7])
             if sm == 1:
@@ -210,14 +211,18 @@ class App(QWidget):
             self.tableWidget.setItem(
                 i, 3, QTableWidgetItem(f"{ey}-{format(em,'02d')}"))
 
-            self.tableWidget.setItem(i, 4, QTableWidgetItem(type=2))
+            pcount = format(
+                (month - int(s['start_yyyymm'][-2:])+12) % 12+1, '02d')
+            self.tableWidget.setItem(i, 4, QTableWidgetItem(pcount))
+
+            self.tableWidget.setItem(i, 5, QTableWidgetItem(type=2))
             edit_button = QPushButton()
             edit_button.setText('RENEW')
             edit_button.setFont(self.default_font)
             edit_button.setGeometry(QtCore.QRect(310, 390, 500, 50))
             edit_button.clicked.connect(lambda x, sevadar_id=s['sevadar_id'], sevadar_name=s['name'], ey=ey, em=em: self.renew_callback(
                 sevadar_id, sevadar_name, ey, em))
-            self.tableWidget.setCellWidget(i, 4, edit_button)
+            self.tableWidget.setCellWidget(i, 5, edit_button)
 
             self.tableWidget.setRowHeight(i, 50)
 
@@ -263,5 +268,5 @@ if __name__ == '__main__':
     global app
     app = QApplication(sys.argv)
     global ex
-    ex = App(2023, 1)
+    ex = App(2022, 11)
     sys.exit(app.exec())

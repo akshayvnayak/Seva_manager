@@ -102,8 +102,9 @@ def create_pdf(year, month, calendar_dict):
         name = i['name']
         date = format(i['date'], '02d')+'-'+format(month, '02d')+'-'+str(year)
         pno = str(i['pno'])
-        pcount = format((month - int(i['start_yyyymm'][-2:])+13) % 12, '02d')
 
+        pcount = format(
+            (month - int(i['start_yyyymm'][-2:])+12) % 12+1, '02d')
         d = pan.gregorian_to_jd(pan.Date(year, month, i['date']))
         vaara = (first_day+i['date']) % 7 + 1
         # print(i, first_day, vaara)
@@ -173,7 +174,7 @@ def create_pdf(year, month, calendar_dict):
 
 
 if __name__ == "__main__":
-    month = 11
-    year = 2022
+    month = 10
+    year = 2023
     calendar_dict = assign_dates('data/Seva_manager.db', year, month)
     create_pdf(year, month, calendar_dict)
