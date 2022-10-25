@@ -70,7 +70,7 @@ class Ui (Ui_MainWindow):
         self.checkBox_flexible.setChecked(self.sevadar['flexible'])
 
         self.radioButton_existing_address.click()
-        self.comboBox_address.setCurrentIndex(self.sevadar['address_id']-1)
+        self.comboBox_address.setCurrentIndex(self.sevadar['address_id'])
 
         self.radioButton_group_no.setChecked(self.sevadar['group_id'] == None)
 
