@@ -44,9 +44,11 @@ class Ui (Ui_MainWindow):
         self.comboBox_rashi.setCurrentIndex(self.sevadar['rashi']-1)
         self.comboBox_nakshatra.setCurrentIndex(self.sevadar['nakshatra']-1)
         self.comboBox_gotra.setCurrentIndex(self.sevadar['gotra']-1)
-        self.comboBox_start_month.setCurrentIndex(
-            int(self.sevadar['start_yyyymm'][-2:])-1)
-        self.spinBox_start_year.setValue(int(self.sevadar['start_yyyymm'][:4]))
+        no_seva = self.sevadar['start_yyyymm'] == None
+        self.comboBox_start_month.setCurrentIndex(-1 if no_seva else
+                                                  int(self.sevadar['start_yyyymm'][-2:])-1)
+        self.spinBox_start_year.setValue(-1 if no_seva else
+                                         int(self.sevadar['start_yyyymm'][:4]))
         self.radioButton_date_basis[self.sevadar['pooja_basis']].click()
 
         # "date":(self.spinBox_date.value(),
@@ -141,13 +143,30 @@ def edit_sevadar_callback(s_id, prev_sevadar, sevadar_details_dict):
                 cur.execute(
                     f"DELETE FROM SevadarsFlexible WHERE sevadar_id = {s_id}")
 
-        cur.execute(f"""
-            UPDATE SevaStartMonths
-            SET start_yyyymm = '{sevadar_details.start_month}'
-            WHERE sevadar_id = {s_id}
-                AND start_yyyymm = (select start_yyyymm from SevaStartMonths where sevadar_id = {s_id});
-        """)
-        # conn.commit()
+        if (sevadar_details.start_month[-2:] != '00'):
+            print("date not null")
+            conn.commit()
+            cur.execute(f"""
+                SELECT * from SevaStartMonths WHERE sevadar_id = {s_id};
+            """)
+            if cur.fetchone() == None:
+                cur.execute(f"""
+                insert into SevaStartMonths (sevadar_id, start_yyyymm)
+                VALUES ({s_id},'{sevadar_details.start_month}');
+            """)
+            else:
+                cur.execute(f"""
+                    UPDATE SevaStartMonths
+                    SET start_yyyymm = '{sevadar_details.start_month}'
+                    WHERE sevadar_id = {s_id}
+                        AND start_yyyymm = '{prev_sevadar['start_yyyymm']}';
+                """)
+            print(f"""
+                    UPDATE SevaStartMonths
+                    SET start_yyyymm = '{sevadar_details.start_month}'
+                    WHERE sevadar_id = {s_id} AND start_yyyymm = '{prev_sevadar['start_yyyymm']}';
+                """)
+        conn.commit()
 
         address_id = sevadar_details.address_id
         if sevadar_details.new_address_flag:

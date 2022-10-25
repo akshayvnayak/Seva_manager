@@ -177,8 +177,24 @@ try:
                     start_yyyymm || '-00' AS end_yyyymm
                 FROM SevaStartMonths;
 
+            INSERT INTO Addresses (
+                          address_id,
+                          line1,
+                          line2,
+                          line3,
+                          line4
+                      )
+                      VALUES (
+                          '0',
+                          '',
+                          '',
+                          '',
+                          ''
+                      );
 
             COMMIT TRANSACTION;
+
+            
             PRAGMA foreign_keys = on;
 
         '''
@@ -292,8 +308,6 @@ try:
     # )
     # conn.commit()
 except Error as e:
-    print('SQLite Error:',e)
+    print('SQLite Error:', e)
 finally:
     conn.close()
-
-

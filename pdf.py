@@ -52,7 +52,7 @@ def create_pdf(year, month, calendar_dict):
                 cur.execute(f"""
                         select 
                             sevadar_id, name, rashi, nakshatra, gotra, start_yyyymm,
-                            group_id, line1, line2, line3, line4
+                            group_id, address_id, line1, line2, line3, line4
                         from SevadarDetailsRecent where sevadar_id = {s_id}
                         
                         """)
@@ -98,6 +98,7 @@ def create_pdf(year, month, calendar_dict):
     first_day = datetime(year, month, 1).weekday()
 
     for i in reversed(seva_order):
+        print(i)
         name = i['name']
         date = format(i['date'], '02d')+'-'+format(month, '02d')+'-'+str(year)
         pno = str(i['pno'])
@@ -123,7 +124,7 @@ def create_pdf(year, month, calendar_dict):
         gotra = i['gotra']
         # print(i['line1'])
         # print(group)
-        if i['group_id'] == None or (i['sevadar_id'] in group_env):
+        if (i['group_id'] == None or (i['sevadar_id'] in group_env)) and i['address_id'] != 0:
             # l1 = str(i['pno'])
             # print(l1)
             env_pdf.add_page()
@@ -136,7 +137,7 @@ def create_pdf(year, month, calendar_dict):
             env_pdf.text(110, 72.45, i['line4'])
 
         pdf.add_page()
-        pdf.image("templates/invoice.jpg", 0, 0, 210, 99)
+        pdf.image("templates/invoice_high.jpg", 0, 0, 210, 99)
 
         pdf.set_font('Arial', 'B', 13.5)
         pdf.text(58, 39.5, name)
@@ -167,6 +168,8 @@ def create_pdf(year, month, calendar_dict):
     pdf.output(f"PDFs\{yyyymm}\invoice_{yyyymm}.pdf", 'F')
     env_pdf.output(f"PDFs\{yyyymm}\envelope_{yyyymm}.pdf", 'F')
     print("PDF saved")
+    import subprocess
+    subprocess.Popen(f'explorer /select,"PDFs\{yyyymm}\envelope_{yyyymm}.pdf"')
 
 
 if __name__ == "__main__":

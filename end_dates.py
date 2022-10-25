@@ -28,7 +28,7 @@ class Ui_Dialog(object):
 
     def setupUi(self, Dialog, s_id, s_name, ey, em):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(482, 216)
+        # Dialog.resize(482, 216)
         Dialog.setFont(self.default_font)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(70, 160, 341, 32))
@@ -132,6 +132,11 @@ class Ui_Dialog(object):
 class App(QWidget):
     def __init__(self, year, month):
         super().__init__()
+
+        self.default_font = QtGui.QFont()
+        self.default_font.setPointSize(13)
+        self.setFont(self.default_font)
+
         self.year = year
         self.month = month
         self.title = 'Ending poojas from ' + \
@@ -208,10 +213,13 @@ class App(QWidget):
             self.tableWidget.setItem(i, 4, QTableWidgetItem(type=2))
             edit_button = QPushButton()
             edit_button.setText('RENEW')
-            edit_button.setGeometry(QtCore.QRect(310, 390, 181, 31))
+            edit_button.setFont(self.default_font)
+            edit_button.setGeometry(QtCore.QRect(310, 390, 500, 50))
             edit_button.clicked.connect(lambda x, sevadar_id=s['sevadar_id'], sevadar_name=s['name'], ey=ey, em=em: self.renew_callback(
                 sevadar_id, sevadar_name, ey, em))
             self.tableWidget.setCellWidget(i, 4, edit_button)
+
+            self.tableWidget.setRowHeight(i, 50)
 
         # self.tableWidget.resizeRowsToContents()
         # self.tableWidget.resizeColumnsToContents()
@@ -220,6 +228,20 @@ class App(QWidget):
         # Table will fit the screen horizontally
         # self.tableWidget.horizontalHeader().setStretchLastSection(True)
         # self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        # self.tableWidget.setStyleSheet("""
+        #     QTableWidget::item {padding: 5px; font-size: 200px}
+        #     """)
+
+        self.tableWidget.horizontalHeader().setStyleSheet("""
+            QHeaderView::section {padding: 10px; font-size: 13pt}
+            """)
+        self.tableWidget.setFont(self.default_font)
+        self.default_font.setBold(True)
+        self.tableWidget.horizontalHeader().setFont(self.default_font)
+
+        self.tableWidget.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeToContents)
 
     def renew_callback(self, sevadar_id, sevadar_name, ey, em):
         print(sevadar_id, sevadar_name, 'renew')

@@ -14,20 +14,19 @@ import add_sevadar_page
 import display_sevadars
 import overview
 import end_dates
+import edit_existing_address
 from cloud import drive_upload
 from PyQt5 import QtCore, QtGui, QtWidgets
 from datetime import datetime
 
 
-
-
 class Ui_MainWindow(object):
-    def __init__(self,MainWindow) -> None:
+    def __init__(self, MainWindow) -> None:
         super().__init__()
-        
+
         self.default_font = QtGui.QFont()
         self.default_font.setPointSize(13)
-        
+
         self.setupUi(MainWindow)
         self.retranslateUi(MainWindow)
         self.add_options(MainWindow)
@@ -46,22 +45,33 @@ class Ui_MainWindow(object):
         self.centralwidget.setFont(self.default_font)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.ui_x, 110, 500, 100))
+        self.verticalLayoutWidget.setGeometry(
+            QtCore.QRect(self.ui_x, 110, 500, 150))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         # self.verticalLayout.setAlignment(QtCore.Qt.AlignCenter)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.add_sevadar_button = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.add_sevadar_button = QtWidgets.QPushButton(
+            self.verticalLayoutWidget)
         self.add_sevadar_button.setObjectName("add_sevadar_button")
         self.verticalLayout.addWidget(self.add_sevadar_button)
         self.display_button = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.display_button.setObjectName("display_button")
         self.verticalLayout.addWidget(self.display_button)
+
+        self.edit_existing_address_button = QtWidgets.QPushButton(
+            self.verticalLayoutWidget)
+        self.edit_existing_address_button.setObjectName(
+            "edit_existing_address_button")
+        self.verticalLayout.addWidget(self.edit_existing_address_button)
+
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(self.ui_x, 250, 500, 150))
+        self.horizontalLayoutWidget.setGeometry(
+            QtCore.QRect(self.ui_x, 295, 500, 150))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.horizontalLayoutWidget)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(
+            self.horizontalLayoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -69,7 +79,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setSpacing(13)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.month_label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.month_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.month_label.setAlignment(
+            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.month_label.setObjectName("month_label")
         self.horizontalLayout.addWidget(self.month_label)
         self.month_comboBox = QtWidgets.QComboBox(self.horizontalLayoutWidget)
@@ -79,23 +90,27 @@ class Ui_MainWindow(object):
         self.month_comboBox.setObjectName("month_comboBox")
         self.horizontalLayout.addWidget(self.month_comboBox)
         self.year_label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.year_label.setObjectName("year_label")        
+        self.year_label.setObjectName("year_label")
         self.year_label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.year_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.year_label.setAlignment(
+            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         self.horizontalLayout.addWidget(self.year_label)
         self.year_spinBox = QtWidgets.QSpinBox(self.horizontalLayoutWidget)
         self.year_spinBox.setMinimum(2000)
         self.year_spinBox.setMaximum(9999)
-        self.year_spinBox.setProperty("value", self.current_date.year if self.current_date.month!=1 else self.current_date.year+1)#display next month
+        self.year_spinBox.setProperty("value", self.current_date.year if self.current_date.month !=
+                                      1 else self.current_date.year+1)  # display next month
         self.year_spinBox.setDisplayIntegerBase(10)
         self.year_spinBox.setObjectName("year_spinBox")
         self.horizontalLayout.addWidget(self.year_spinBox)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-        self.download_button = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.download_button = QtWidgets.QPushButton(
+            self.horizontalLayoutWidget)
         self.download_button.setObjectName("download_button")
         self.verticalLayout_2.addWidget(self.download_button)
-        self.view_end_button = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.view_end_button = QtWidgets.QPushButton(
+            self.horizontalLayoutWidget)
         self.view_end_button.setObjectName("view_end_button")
         self.verticalLayout_2.addWidget(self.view_end_button)
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -107,7 +122,8 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.cloud_backup_button = QtWidgets.QPushButton(self.centralwidget)
-        self.cloud_backup_button.setGeometry(QtCore.QRect(self.ui_x+25, 430, 450, 45))
+        self.cloud_backup_button.setGeometry(
+            QtCore.QRect(self.ui_x+25, 480, 450, 45))
         self.cloud_backup_button.setObjectName("cloud_backup_button")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -124,34 +140,40 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Seva Manager"))
-        self.add_sevadar_button.setText(_translate("MainWindow", "Add sevadar"))
-        self.display_button.setText(_translate("MainWindow", "View/Edit details"))
+        self.add_sevadar_button.setText(
+            _translate("MainWindow", "Add sevadar"))
+        self.display_button.setText(_translate(
+            "MainWindow", "View/Edit details"))
+        self.edit_existing_address_button.setText(_translate(
+            "MainWindow", "Edit Existing Address"))
         self.month_label.setText(_translate("MainWindow", "Month"))
         self.year_label.setText(_translate("MainWindow", "Year"))
         self.download_button.setText(_translate("MainWindow", "Download pdf"))
-        self.view_end_button.setText(_translate("MainWindow", "View End months"))
+        self.view_end_button.setText(
+            _translate("MainWindow", "View End months"))
         self.label.setText(_translate("MainWindow", "Seva Manager"))
-        self.cloud_backup_button.setText(_translate("MainWindow", "Cloud backup (Google drive)"))
+        self.cloud_backup_button.setText(_translate(
+            "MainWindow", "Cloud backup (Google drive)"))
 
-    def add_options(self,MainWindow):
+    def add_options(self, MainWindow):
         self.month_comboBox.addItems(months.values())
-        self.month_comboBox.setCurrentIndex(self.current_date.month%12)
-    
-    def connectUi(self,MainWindow):
+        self.month_comboBox.setCurrentIndex(self.current_date.month % 12)
+
+    def connectUi(self, MainWindow):
         self.add_sevadar_button.clicked.connect(self.add_callback)
         self.display_button.clicked.connect(self.display_callback)
+        self.edit_existing_address_button.clicked.connect(
+            self.edit_address_callback)
         self.download_button.clicked.connect(self.overview_callback)
         self.cloud_backup_button.clicked.connect(drive_upload)
         self.view_end_button.clicked.connect(self.view_end_callback)
-
-
 
     def add_callback(self):
         print("add")
         add_window = QtWidgets.QMainWindow()
         self.add_sevadar_ui = add_sevadar_page.Ui_MainWindow(add_window)
         add_window.showMaximized()
-        
+
     def display_callback(self):
         print("display")
         self.view_edit_ui = display_sevadars.App()
@@ -160,14 +182,18 @@ class Ui_MainWindow(object):
         print("overview")
         year = self.year_spinBox.value()
         month = self.month_comboBox.currentIndex()+1
-        self.overview_ui = overview.App(year,month)
+        self.overview_ui = overview.App(year, month)
+
+    def edit_address_callback(self):
+        print("edit address")
+        self.end_dates_ui = edit_existing_address.App()
 
     def view_end_callback(self):
         print("view end")
         year = self.year_spinBox.value()
         month = self.month_comboBox.currentIndex()+1
-        self.end_dates_ui = end_dates.App(year,month)
-        
+        self.end_dates_ui = end_dates.App(year, month)
+
 
 if __name__ == "__main__":
     import sys
