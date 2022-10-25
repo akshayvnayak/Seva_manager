@@ -41,6 +41,7 @@ def assign_dates(database, year, month):
     # print(
     #     int(month_panchanga[month_panchanga['nakshatra'] == 22].date.head(1)))
     month_calendar = monthcalendar(year, month)
+    total_days = monthrange(year, month)[1]
     assigned_sevadars = {i+1: [] for i in range(monthrange(year, month)[1])}
     # print(assigned_sevadars)
     try:
@@ -80,7 +81,8 @@ def assign_dates(database, year, month):
             date = i['pooja_date']
             # print('sid:',sevadar_id)
             if basis == 0:
-                d = date
+                d = date if date <= total_days else total_days
+
             elif basis == 1:
                 d = month_panchanga[month_panchanga['nakshatra'] == date].date.head(
                     1)
@@ -123,7 +125,7 @@ def assign_dates(database, year, month):
             date = i['pooja_date']
             # print('sid:',sevadar_id)
             if basis == 0:
-                d = date
+                d = date if date <= total_days else total_days
             elif basis == 1:
                 d = month_panchanga[month_panchanga['nakshatra'] == date].date.head(
                     1)
@@ -163,7 +165,6 @@ def assign_dates(database, year, month):
         ##################################################################################################################################
 
         date_iter = 1
-        total_days = monthrange(year, month)[1]
         for i in flexible:
             if not assigned_sevadars[date_iter]:
                 assigned_sevadars[date_iter].append(i['sevadar_id'])
