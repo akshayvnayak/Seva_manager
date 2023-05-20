@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --onefile --windowed --icon "E:/Projects/Python projects/Seva_manager/Icon.ico"  "E:/Projects/Python projects/Seva_manager/main.py"

@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3.dbapi2 import Error
 
 try:
-    conn = sqlite3.connect('data\Seva_manager.db')
+    conn = sqlite3.connect('data\Seva_manager_new.db')
     print("Opened database successfully")
     cur = conn.cursor()
     cur.executescript(
