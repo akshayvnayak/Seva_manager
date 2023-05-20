@@ -78,24 +78,24 @@ jd_to_gregorian = lambda jd: swe.revjul(jd, swe.GREG_CAL)   # returns (y, m, d, 
 
 def solar_longitude(jd):
   """Solar longitude at given instant (julian day) jd"""
-  data = swe.calc_ut(jd, swe.SUN, flag = swe.FLG_SWIEPH)
+  data = swe.calc_ut(jd, swe.SUN, flags = swe.FLG_SWIEPH)
   return data[0][0]   # in degrees
 
 def lunar_longitude(jd):
   """Lunar longitude at given instant (julian day) jd"""
-  data = swe.calc_ut(jd, swe.MOON, flag = swe.FLG_SWIEPH)
+  data = swe.calc_ut(jd, swe.MOON, flags = swe.FLG_SWIEPH)
   # print(data,type(data))
   return data[0][0]   # in degrees
 
 def lunar_latitude(jd):
   """Lunar latitude at given instant (julian day) jd"""
-  data = swe.calc_ut(jd, swe.MOON, flag = swe.FLG_SWIEPH)
+  data = swe.calc_ut(jd, swe.MOON, flags = swe.FLG_SWIEPH)
   return data[1]   # in degrees
 
 def sunrise(jd, place):
   """Sunrise when centre of disc is at horizon for given date and place"""
   lat, lon, tz = place
-  result = swe.rise_trans(jd - tz/24, swe.SUN, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_RISE)
+  result = swe.rise_trans(jd - tz/24, swe.SUN, rsmi=swe.BIT_DISC_CENTER + swe.CALC_RISE, geopos=(lon, lat, 0))
   rise = result[1][0]  # julian-day number
   # Convert to local time
   return [rise + tz/24., to_dms((rise - jd) * 24 + tz)]
@@ -103,7 +103,7 @@ def sunrise(jd, place):
 def sunset(jd, place):
   """Sunset when centre of disc is at horizon for given date and place"""
   lat, lon, tz = place
-  result = swe.rise_trans(jd - tz/24, swe.SUN, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_SET)
+  result = swe.rise_trans(jd - tz/24, swe.SUN, rsmi=swe.BIT_DISC_CENTER + swe.CALC_SET, geopos=(lon, lat, 0))
   setting = result[1][0]  # julian-day number
   # Convert to local time
   return [setting + tz/24., to_dms((setting - jd) * 24 + tz)]
@@ -111,7 +111,7 @@ def sunset(jd, place):
 def moonrise(jd, place):
   """Moonrise when centre of disc is at horizon for given date and place"""
   lat, lon, tz = place
-  result = swe.rise_trans(jd - tz/24, swe.MOON, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_RISE)
+  result = swe.rise_trans(jd - tz/24, swe.MOON, rsmi=swe.BIT_DISC_CENTER + swe.CALC_RISE, geopos=(lon, lat, 0))
   rise = result[1][0]  # julian-day number
   # Convert to local time
   return to_dms((rise - jd) * 24 + tz)
@@ -119,7 +119,7 @@ def moonrise(jd, place):
 def moonset(jd, place):
   """Moonset when centre of disc is at horizon for given date and place"""
   lat, lon, tz = place
-  result = swe.rise_trans(jd - tz/24, swe.MOON, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_SET)
+  result = swe.rise_trans(jd - tz/24, swe.MOON, rsmi=swe.BIT_DISC_CENTER + swe.CALC_SET, geopos=(lon, lat, 0))
   setting = result[1][0]  # julian-day number
   # Convert to local time
   return to_dms((setting - jd) * 24 + tz)

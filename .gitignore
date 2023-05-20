@@ -1,3 +1,5 @@
 *.pyc
 env
 template_preperation
+.virtenv
+output
