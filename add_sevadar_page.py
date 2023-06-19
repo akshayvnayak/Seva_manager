@@ -21,7 +21,7 @@ def dict_factory(cursor, row):
     return d
 
 
-def add_sevadar(sevadar_details_dict,window):
+def add_sevadar(sevadar_details_dict, window):
     window.close()
     sevadar_details = namedtuple("SevadarDetails", sevadar_details_dict.keys())(
         *sevadar_details_dict.values())
@@ -104,7 +104,6 @@ class Ui_MainWindow(QWidget):
     def __init__(self, window):
         super().__init__()
 
-        
         self.default_font = QFont()
         self.default_font.setPointSize(15)
 
@@ -122,8 +121,8 @@ class Ui_MainWindow(QWidget):
         self.buttonBox.setObjectName(u"buttonBox")
         self.gridLayoutWidget = QWidget(self.centralwidget)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(200,20, 500, 400))
-        
+        self.gridLayoutWidget.setGeometry(QRect(200, 20, 500, 400))
+
         self.buttonBox.setGeometry(QRect(450, 590, 300, 40))
         self.buttonBox.setStandardButtons(
             QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
@@ -167,9 +166,9 @@ class Ui_MainWindow(QWidget):
         self.spinBox_start_year.setMinimum(2000)
         self.spinBox_start_year.setMaximum(9999)
 
-        
         self.current_date = datetime.now()
-        self.spinBox_start_year.setValue(self.current_date.year if self.current_date.month!=1 else self.current_date.year+1)
+        self.spinBox_start_year.setValue(
+            self.current_date.year if self.current_date.month != 1 else self.current_date.year+1)
 
         self.horizontalLayout_seva_start.addWidget(self.spinBox_start_year)
 
@@ -277,7 +276,7 @@ class Ui_MainWindow(QWidget):
         self.verticalLayout_address.setObjectName(u"verticalLayout_address")
         self.comboBox_address = QComboBox(self.gridLayoutWidget)
         self.comboBox_address.setObjectName(u"comboBox_address")
-        self.comboBox_address.setStyleSheet("QComboBox { combobox-popup: ; }");
+        self.comboBox_address.setStyleSheet("QComboBox { combobox-popup: ; }")
 
         self.verticalLayout_address.addWidget(self.comboBox_address)
 
@@ -570,14 +569,14 @@ class Ui_MainWindow(QWidget):
             "date_basis": self.radioButtonGroup_date_basis.checkedId(),
             "date": (self.spinBox_date.value(),
                      self.comboBox_nakshatra_2.currentIndex()+1,
-                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex(),
+                     self.spinBox_week_no.value()*10+self.comboBox_day.currentIndex()+1,
                      self.comboBox_tithi.currentIndex()+1),
             "flexible_flag": self.checkBox_flexible.isChecked(),
             "new_address_flag": self.radioButton_new_address.isChecked(),
             "group_flag": self.radioButton_group_yes.isChecked(),
             "address_id": int(self.comboBox_address.currentText().split(',')[0]) if self.comboBox_address.currentText() != "" else -1,
             "address": [i.text() for i in self.lineEdit_address]
-        },self.MainWindow))
+        }, self.MainWindow))
 
         self.buttonBox.rejected.connect(lambda: self.MainWindow.close())
 
@@ -608,7 +607,7 @@ class Ui_MainWindow(QWidget):
         self.comboBox_gotra.addItems(SanskritNames.gotras.values())
         self.comboBox_tithi.addItems(SanskritNames.tithis.values())
         self.comboBox_start_month.addItems(SanskritNames.months.values())
-        self.comboBox_start_month.setCurrentIndex(self.current_date.month%12)
+        self.comboBox_start_month.setCurrentIndex(self.current_date.month % 12)
         self.comboBox_day.addItems(SanskritNames.vaaras.values())
         self.comboBox_nakshatra_2.addItems(SanskritNames.nakshatras.values())
 

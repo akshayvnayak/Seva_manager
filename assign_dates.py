@@ -75,6 +75,7 @@ def assign_dates(database, year, month):
         for i in x:
             if i['flexible']:
                 flexible.append(i)
+                # print('flexible', i['sevadar_id'])
                 continue
             sevadar_id = i['sevadar_id']
             basis = i['pooja_basis']
@@ -94,9 +95,9 @@ def assign_dates(database, year, month):
                 day = date % 10
                 if weekno > len(month_calendar)-1:
                     weekno = len(month_calendar)-1
-                d = month_calendar[weekno][day]
+                d = month_calendar[weekno][day-1]
                 while d == 0:
-                    d = month_calendar[weekno-1][day]
+                    d = month_calendar[weekno-1][day-1]
             elif basis == 3:
                 d = month_panchanga[month_panchanga['tithi']
                                     == date].date.head(1)
@@ -109,9 +110,9 @@ def assign_dates(database, year, month):
             # print(i)
             # print(assigned_sevadars)
 
-        # print("Non flexible")
-        # print(flexible)
-        # print(assigned_sevadars)
+        print("Non flexible")
+        print(flexible)
+        print(assigned_sevadars)
 
         ##################################################################################################################################
         ################################# Assign flexible sevadars if their prefered slot is available  ##################################
@@ -123,7 +124,7 @@ def assign_dates(database, year, month):
             sevadar_id = i['sevadar_id']
             basis = i['pooja_basis']
             date = i['pooja_date']
-            # print('sid:',sevadar_id)
+            # print('sid:', sevadar_id)
             if basis == 0:
                 d = date if date <= total_days else total_days
             elif basis == 1:
@@ -137,9 +138,9 @@ def assign_dates(database, year, month):
                 day = date % 10
                 if weekno > len(month_calendar)-1:
                     weekno = len(month_calendar)-1
-                d = month_calendar[weekno][day]
+                d = month_calendar[weekno][day-1]
                 while d == 0:
-                    d = month_calendar[weekno-1][day]
+                    d = month_calendar[weekno-1][day-1]
             elif basis == 3:
                 d = month_panchanga[month_panchanga['tithi']
                                     == date].date.head(1)
@@ -156,26 +157,31 @@ def assign_dates(database, year, month):
 
         flexible = flexible_.copy()
 
-        # print("\nFlexible with their preference")
-        # print(flexible)
-        # print(assigned_sevadars)
+        print("\nFlexible with their preference")
+        print(flexible)
+        print(assigned_sevadars)
 
         ##################################################################################################################################
         ################################# Fill empty slots with remaining flexible sevadars ##############################################
         ##################################################################################################################################
 
         date_iter = 1
-        for i in flexible:
-            if not assigned_sevadars[date_iter]:
-                assigned_sevadars[date_iter].append(i['sevadar_id'])
-                flexible_.remove(i)
-            date_iter += 1
-            if date_iter > total_days:
-                date_iter = 1
+        flexible_ = flexible.copy()
+        for i_ in range(len(flexible)):
+            i = flexible[i_]
+            # print('sid:', i['sevadar_id'])
+
+            while date_iter < total_days and assigned_sevadars[date_iter]:
+                date_iter += 1
+            assigned_sevadars[date_iter].append(i['sevadar_id'])
+            flexible_.remove(i)
+            # if not assigned_sevadars[date_iter]:
+            # date_iter += 1
+            # if date_iter > total_da
         flexible = flexible_
-        # print("\nFill Empty with flexible")
-        # print(flexible)
-        # print(assigned_sevadars)
+        print("\nFill Empty with flexible")
+        print(flexible)
+        print(assigned_sevadars)
 
         ##################################################################################################################################
         ################################# Assign remaining sevadars with preferred #######################################################
@@ -195,4 +201,4 @@ def assign_dates(database, year, month):
 
 
 if __name__ == '__main__':
-    assign_dates('data/Seva_manager.db', 2022, 11)
+    assign_dates('data/Seva_manager.db', 2023, 7)
