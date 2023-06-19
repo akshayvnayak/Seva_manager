@@ -17,6 +17,35 @@ def dict_factory(cursor, row):
     return d
 
 
+def subtract_yyyy_mm(yyyymm1, yyyymm2):
+    year1, month1 = map(int, yyyymm1.split('-'))
+    year2, month2 = map(int, yyyymm2.split('-'))
+
+    total_months1 = year1 * 12 + month1
+    total_months2 = year2 * 12 + month2
+
+    diff_months = total_months1 - total_months2
+
+    return diff_months
+
+
+def subtract_months(year, month, num_months):
+
+    total_months = year * 12 + month
+    new_total_months = total_months - num_months
+
+    new_year = new_total_months // 12
+    new_month = new_total_months % 12
+
+    if new_month < 1:
+        new_year -= 1
+        new_month += 12
+
+    new_yyyymm = f"{new_year:04d}-{new_month:02d}"
+
+    return new_yyyymm
+
+
 class Ui_Dialog(object):
     def __init__(self, d) -> None:
         super().__init__()
@@ -175,7 +204,7 @@ class App(QWidget):
             conn.commit()
             cur.execute(f"""
                 select sevadar_id,name,start_yyyymm from sevadardetailsRecent 
-                where start_yyyymm > "{year-1}-{format(month,'02d')}"
+                where start_yyyymm > "{subtract_months(year,month,14)}"
                 order by start_yyyymm;
             """)
             sevadars_details = cur.fetchall()
@@ -211,8 +240,10 @@ class App(QWidget):
             self.tableWidget.setItem(
                 i, 3, QTableWidgetItem(f"{ey}-{format(em,'02d')}"))
 
-            pcount = format(
-                (month - int(s['start_yyyymm'][-2:])+12) % 12+1, '02d')
+            pcount = str(subtract_yyyy_mm(
+                f"{year}-{month}", s['start_yyyymm'])+1)
+            # pcount = format(
+            #     (month - int(s['start_yyyymm'][-2:])+12) % 12+1, '02d')
             self.tableWidget.setItem(i, 4, QTableWidgetItem(pcount))
 
             self.tableWidget.setItem(i, 5, QTableWidgetItem(type=2))
@@ -268,5 +299,5 @@ if __name__ == '__main__':
     global app
     app = QApplication(sys.argv)
     global ex
-    ex = App(2022, 11)
+    ex = App(2023, 6)
     sys.exit(app.exec())
