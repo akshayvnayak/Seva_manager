@@ -9,6 +9,9 @@ def calc_decrement(n, limit): return n - 1 if n > 1 else limit
 # print(calc_decrement(25,27))
 
 
+def parse_weekday(day): return (day+5) % 7
+
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
@@ -80,6 +83,7 @@ def assign_dates(database, year, month):
             sevadar_id = i['sevadar_id']
             basis = i['pooja_basis']
             date = i['pooja_date']
+            d = 0
             # print('sid:',sevadar_id)
             if basis == 0:
                 d = date if date <= total_days else total_days
@@ -92,12 +96,19 @@ def assign_dates(database, year, month):
                                         == calc_decrement(date, 27)].date.head(1)
             elif basis == 2:
                 weekno = date//10
-                day = date % 10
-                if weekno > len(month_calendar)-1:
-                    weekno = len(month_calendar)-1
-                d = month_calendar[weekno][day-1]
-                while d == 0:
-                    d = month_calendar[weekno-1][day-1]
+                day = parse_weekday(date % 10)
+                week_index = 0
+                for week in month_calendar:
+                    if week[day] != 0:
+                        week_index += 1
+                        if week_index == weekno:
+                            d = week[day]
+
+                # if weekno > len(month_calendar)-1:
+                #     weekno = len(month_calendar)-1
+                # d = month_calendar[weekno][(day+5) % 7]
+                # while d == 0:
+                #     d = month_calendar[weekno-1][(day+5) % 7]
             elif basis == 3:
                 d = month_panchanga[month_panchanga['tithi']
                                     == date].date.head(1)
@@ -135,12 +146,20 @@ def assign_dates(database, year, month):
                                         == calc_decrement(date, 27)].date.head(1)
             elif basis == 2:
                 weekno = date//10
-                day = date % 10
-                if weekno > len(month_calendar)-1:
-                    weekno = len(month_calendar)-1
-                d = month_calendar[weekno][day-1]
-                while d == 0:
-                    d = month_calendar[weekno-1][day-1]
+                day = parse_weekday(date % 10)
+                week_index = 0
+                for week in month_calendar:
+                    if week[day] != 0:
+                        week_index += 1
+                        if week_index == weekno:
+                            d = week[day]
+                # weekno = date//10
+                # day = date % 10
+                # if weekno > len(month_calendar)-1:
+                #     weekno = len(month_calendar)-1
+                # d = month_calendar[weekno][(day-5) % 7]
+                # while d == 0:
+                #     d = month_calendar[weekno-1][(day-5) % 7]
             elif basis == 3:
                 d = month_panchanga[month_panchanga['tithi']
                                     == date].date.head(1)
@@ -201,4 +220,4 @@ def assign_dates(database, year, month):
 
 
 if __name__ == '__main__':
-    assign_dates('data/Seva_manager.db', 2023, 7)
+    assign_dates('data/Seva_manager.db', 2023, 6)
