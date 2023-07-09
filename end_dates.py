@@ -4,10 +4,16 @@ from distutils.log import error
 import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QColor
 import sqlite3
 from traceback import format_exc
 import SanskritNames as sknames
 import edit_sevadar_page
+
+
+def setColortoRow(table, rowIndex, color):
+    for j in range(table.columnCount()):
+        table.item(rowIndex, j).setBackground(color)
 
 
 def dict_factory(cursor, row):
@@ -240,22 +246,33 @@ class App(QWidget):
             self.tableWidget.setItem(
                 i, 3, QTableWidgetItem(f"{ey}-{format(em,'02d')}"))
 
-            pcount = str(subtract_yyyy_mm(
-                f"{year}-{month}", s['start_yyyymm'])+1)
+            pcount = subtract_yyyy_mm(f"{year}-{month}", s['start_yyyymm'])+1
             # pcount = format(
             #     (month - int(s['start_yyyymm'][-2:])+12) % 12+1, '02d')
-            self.tableWidget.setItem(i, 4, QTableWidgetItem(pcount))
+            self.tableWidget.setItem(i, 4, QTableWidgetItem(str(pcount)))
 
             self.tableWidget.setItem(i, 5, QTableWidgetItem(type=2))
             edit_button = QPushButton()
             edit_button.setText('RENEW')
-            edit_button.setFont(self.default_font)
+            # edit_button.setFont(self.default_font)
             edit_button.setGeometry(QtCore.QRect(310, 390, 500, 50))
             edit_button.clicked.connect(lambda x, sevadar_id=s['sevadar_id'], sevadar_name=s['name'], ey=ey, em=em: self.renew_callback(
                 sevadar_id, sevadar_name, ey, em))
             self.tableWidget.setCellWidget(i, 5, edit_button)
 
             self.tableWidget.setRowHeight(i, 50)
+            if (pcount > 12):
+                self.tableWidget.setItem(
+                    i, 4, QTableWidgetItem(str(pcount) + " - Ended"))
+                setColortoRow(self.tableWidget, i, QColor('crimson'))
+
+                # edit_button.setStyleSheet("background-color: crimson")
+            elif (pcount > 11):
+                setColortoRow(self.tableWidget, i, QColor('orangered'))
+            elif (pcount > 10):
+                setColortoRow(self.tableWidget, i, QColor('gold'))
+            elif (pcount > 9):
+                setColortoRow(self.tableWidget, i, QColor('palegreen'))
 
         # self.tableWidget.resizeRowsToContents()
         # self.tableWidget.resizeColumnsToContents()
