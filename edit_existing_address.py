@@ -38,10 +38,25 @@ class App(QWidget):
         self.createTable()
 
         self.layout = QVBoxLayout()
+        self.edit = QLineEdit()
+        self.edit.textChanged.connect(self.filter)
+        self.layout.addWidget(self.edit)
         self.layout.addWidget(self.tableWidget)
         self.setLayout(self.layout)
 
         self.showMaximized()
+
+    def filter(self, filter_text):
+        for i in range(self.tableWidget.rowCount()):
+            for j in range(self.tableWidget.columnCount()):
+                if (j == 1):
+                    item = self.tableWidget.cellWidget(i, j)
+                else:
+                    item = self.tableWidget.item(i, j)
+                match = filter_text.lower() not in item.text().lower()
+                self.tableWidget.setRowHidden(i, match)
+                if not match:
+                    break
 
     def createTable(self):
         self.tableWidget = QTableWidget()
