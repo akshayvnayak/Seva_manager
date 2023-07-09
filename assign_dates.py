@@ -5,6 +5,23 @@ import sqlite3
 import traceback
 
 
+def subtract_months(year, month, num_months):
+
+    total_months = year * 12 + month
+    new_total_months = total_months - num_months
+
+    new_year = new_total_months // 12
+    new_month = new_total_months % 12
+
+    if new_month < 1:
+        new_year -= 1
+        new_month += 12
+
+    new_yyyymm = f"{new_year:04d}-{new_month:02d}"
+
+    return new_yyyymm
+
+
 def calc_decrement(n, limit): return n - 1 if n > 1 else limit
 # print(calc_decrement(25,27))
 
@@ -63,7 +80,7 @@ def assign_dates(database, year, month):
         cur.execute(f"""
             SELECT sevadar_id,pooja_basis, pooja_date,flexible
                 FROM SevadarDetails
-            where (start_yyyymm > '{year-1}-{format(month,'02d')}' AND start_yyyymm <= '{year}-{format(month,'02d')}');
+            where (start_yyyymm > '{subtract_months(year,month, 14)}' AND start_yyyymm <= '{year}-{format(month,'02d')}');
         """)
         x = cur.fetchall()
 
